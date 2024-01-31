@@ -10,6 +10,8 @@
 `pip install Flask-Migrate`
 
 ### To run:
+`flask --app main run --host=0.0.0.0 --port=5001`
+
 `flask --app hello run`
 sau
 `py hello`

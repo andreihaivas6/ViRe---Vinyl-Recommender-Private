@@ -8,9 +8,9 @@ from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 basedir = pathlib.Path(__file__).parent.resolve()
-# os.environ.pop("FLASK_RUN_FROM_CLI")
 
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{basedir / 'users.db'}"
+# TODO: Here to add noSQL database actually and also the cache
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{basedir / 'recommendation.db'}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'this is my secret'
@@ -21,8 +21,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from routes import *
-app.register_blueprint(app_friendship)
-app.register_blueprint(app_user)
+app.register_blueprint(app_recommendation)
+# app.register_blueprint(app_friendship)
 
 from models import *
 # db.init?
@@ -31,10 +31,5 @@ from models import *
 @app.route("/hello", methods=["GET"])
 def hello_world():
     return {
-        "msg": "Hello, Users!"
+        "msg": "Hello, Recommendation!"
     }
-
-# if __name__ == '__main__':
-#       app.run(host='0.0.0.0', port=80)
-# from waitress import serve
-# serve(app, host="0.0.0.0", port=5005)
