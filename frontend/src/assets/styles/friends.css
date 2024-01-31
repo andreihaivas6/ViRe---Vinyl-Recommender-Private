@@ -1,0 +1,14 @@
+.friend-profile{
+    width: 30px;
+    height: 30px;
+}
+
+button {
+    width: 85%;
+    height: 10%;
+    font-size: 60% !important;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

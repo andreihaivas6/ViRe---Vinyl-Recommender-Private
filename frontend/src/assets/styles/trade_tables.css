@@ -1,0 +1,24 @@
+.buys-style tbody tr td {
+    font-size: 18px;
+    color: blue;
+    padding-left: 10px;
+    text-align: center;
+}
+.buys-style thead tr th {
+    text-align: center;
+}
+
+.sells-style tbody tr td {
+    font-size: 18px;
+    color: green;
+    padding-left: 10px;
+    text-align: center;
+}
+.sells-style thead tr th {
+    text-align: center;
+}
+
+.my-spin {
+    animation: fa-spin 5s infinite linear;
+    -webkit-animation: fa-spin 5s infinite linear;
+}
