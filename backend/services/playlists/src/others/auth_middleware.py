@@ -4,8 +4,6 @@ from flask import current_app
 
 import jwt
 
-from repositories import UserRepository
-
 def auth_middleware(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -27,14 +25,18 @@ def auth_middleware(f):
                 algorithms=["HS256"]
             )
             print(data)
-            current_user = UserRepository().get_user_by_id(data["id"])
-
-            if current_user is None or not current_user.is_active:
-                return {
-                    "msg": "Invalid Authentication token!",
-                    "data": None,
-                    "error": "Unauthorized"
-                }, 401
+        except jwt.ExpiredSignatureError:
+            return {
+                "msg": "Token is expired",
+                "data": None,
+                "error": "Unauthorized"
+            }, 401
+        except jwt.InvalidTokenError:
+            return {
+                "msg": "Token is invalid",
+                "data": None,
+                "error": "Unauthorized"
+            }, 401
         except Exception as e:
             return {
                 "msg": "Something went wrong",

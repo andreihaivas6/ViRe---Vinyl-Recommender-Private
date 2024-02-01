@@ -36,12 +36,15 @@ export default function Register() {
     }
 
 
-    let {fetch_data, data, status} = useFetch(URL_REGISTER, 'POST', {given_body:{
+    let {fetch_data, data, status} = useFetch(URL_REGISTER, 'POST',
+        {
+        given_body:{
         'username': username,
         'email': email,
-        'password': password,
-        'password_check': passwordCheck,
-    }, immediate: false}) 
+        'password_hash': password,
+        },
+        needs_auth: false,
+        immediate: true})
 
     const handleRegister = () => {
         fetch_data()
