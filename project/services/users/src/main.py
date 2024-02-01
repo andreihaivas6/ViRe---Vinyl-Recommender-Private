@@ -5,8 +5,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 basedir = pathlib.Path(__file__).parent.resolve()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{basedir / 'users.db'}"
@@ -22,7 +24,7 @@ migrate = Migrate(app, db)
 from routes import *
 app.register_blueprint(app_friendship)
 app.register_blueprint(app_user)
-
+app.register_blueprint(app_sportify)
 from models import *
 # db.init?
 # db.create_all()
