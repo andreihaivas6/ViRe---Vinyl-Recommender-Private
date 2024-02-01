@@ -22,6 +22,7 @@ migrate = Migrate(app, db)
 
 from routes import *
 app.register_blueprint(app_recommendation)
+app.register_blueprint(app_spotify)
 # app.register_blueprint(app_friendship)
 
 from models import *
