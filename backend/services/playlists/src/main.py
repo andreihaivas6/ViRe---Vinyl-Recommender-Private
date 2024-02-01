@@ -22,9 +22,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from routes import *
-app.register_blueprint(app_friendship)
-app.register_blueprint(app_user)
-app.register_blueprint(app_sportify)
+app.register_blueprint(app_spotify)
 # app.register_blueprint(app_friendship)
 
 from models import *
