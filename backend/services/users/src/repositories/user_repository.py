@@ -39,6 +39,7 @@ class UserRepository:
 
             return user
         except Exception as e:
+            print(e)
             return None
 
     def update_user(self, user_id: int, new_user: User) -> Optional[User]:

@@ -5,13 +5,13 @@ import { swal, icons } from '../mySwal';
 import { isLoggedIn } from '../utils';
 
 const PrivateRoute = ({ children }) => {
-    // if (!isLoggedIn()) {
-    //     swal({
-    //         title:'You are not logged in.',
-    //         icon:icons.error
-    //     })
-    //     return <Navigate to="/login" replace />;
-    // }
+    if (!isLoggedIn()) {
+        swal({
+            title:'You are not logged in.',
+            icon:icons.error
+        })
+        return <Navigate to="/login" replace />;
+    }
     return children;
 };
 
