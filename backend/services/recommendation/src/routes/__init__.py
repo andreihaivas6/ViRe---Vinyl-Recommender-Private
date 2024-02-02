@@ -1,1 +1,1 @@
-from .recommendation import app_recommendation
+from .recommendation_routes import app_recommendation

@@ -1,1 +1,1 @@
-from .sparql import app_sparql
+from .sparql_routes import app_sparql

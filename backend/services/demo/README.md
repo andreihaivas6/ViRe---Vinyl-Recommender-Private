@@ -7,13 +7,13 @@
 `pip install Flask-Migrate`
 
 ### To run:
-`flask --app hello run`
+`flask --app main run`
 sau
-`py hello`
+`py main`
 
 ### Migrate
 https://flask-migrate.readthedocs.io/en/latest/
-`flask --app hello db init`
-`flask --app hello db migrate -m "Initial migration."`
-`flask --app hello db upgrade`
+`flask --app main db init`
+`flask --app main db migrate -m "Initial migration."`
+`flask --app main db upgrade`
 
