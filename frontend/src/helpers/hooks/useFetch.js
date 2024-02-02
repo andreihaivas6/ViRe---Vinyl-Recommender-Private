@@ -28,6 +28,7 @@ export default function useFetch(url, method_name, {
             'Content-Type': 'application/json',
         }
         try {
+
             headers = needs_auth ? await getAuth(headers, navigation) : headers
 
             const result = await fetch(complete_url, {

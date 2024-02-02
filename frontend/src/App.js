@@ -2,7 +2,7 @@ import {Route, Routes, BrowserRouter} from 'react-router-dom'
 
 import Home from './pages/Home';
 
-import Demo from './pages/Demo';
+import PlatformConnect from './pages/PlatformConnect';
 
 import Login from './pages/user/Login';
 import ConfirmationLogin from './pages/user/ConfirmationLogin';
@@ -29,8 +29,8 @@ export default function App() {
                 <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>}></Route>
                 <Route path='/home' index element={<ProtectedRoute><Home/></ProtectedRoute>}></Route>
                 
-                {/* add Private Route for Demo */}
-                <Route path='/demo' element={<PrivateRoute><Demo/></PrivateRoute>}></Route>
+                {/* add Private Route for PlatformConnect */}
+                <Route path='/demo' element={<PrivateRoute><PlatformConnect/></PrivateRoute>}></Route>
                 <Route path='/preferences' element={<PrivateRoute><Preferences/></PrivateRoute>}></Route>
                 <Route path='/friends' element={<PrivateRoute><Friends/></PrivateRoute>}></Route>
                 <Route path='/search-friends' element={<PrivateRoute><SearchFriends/></PrivateRoute>}></Route>

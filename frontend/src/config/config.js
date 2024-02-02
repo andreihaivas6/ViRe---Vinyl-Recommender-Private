@@ -1,13 +1,14 @@
 const WIDTH_SIDEBAR = 230
 const WIDTH_FOR_RESPONSIVENESS = 770
 
-const API_URL = "http://127.0.0.1:8000/api/"
+const API_URL = "http://127.0.0.1:5000/"
 
+export const URL_SPOTIFY = 'spotify/'
 const URL_USERS = 'users/'
-const URL_LOGIN = 'login_request/'
+const URL_LOGIN = 'user/login'
 const URL_LOGIN_EMAIL = 'login_from_email/'
 const URL_REFRESH = 'refresh/'
-const URL_REGISTER = 'register/'
+const URL_REGISTER = 'user'
 const URL_CONFIRMATION_EMAIL = 'activate/'
 const URL_RESEND_CONFIRMATION_EMAIL = 'resend_activate/'
 const URL_FORGOT_PASSWORD = 'password_reset/'
