@@ -15,6 +15,13 @@ class UserRepository:
         user = User.query.filter_by(email=email).first()
         return user
     
+    def get_user_by_username(self, username: str) -> Optional[User]:
+        try:
+            user = User.query.filter_by(username=username).first()
+            return user
+        except Exception as e:
+            return None
+    
     def get_user_by_name(self, first_name: str, last_name: str) -> Optional[User]:
         user = User.query.filter_by(first_name=first_name, last_name=last_name).first()
         return user

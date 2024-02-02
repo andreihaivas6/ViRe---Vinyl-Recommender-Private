@@ -24,13 +24,13 @@ class UserService:
             else self.user_repo.get_users()
 
     def login_user(self, user_to_login: User) -> dict:
-        email = user_to_login.email
+        username = user_to_login.username
         password = user_to_login.password_hash
 
-        user = self.user_repo.get_user_by_email(email)
+        user = self.user_repo.get_user_by_username(username)
         if user is None or not check_password_hash(user.password_hash, password):
             return {
-                'msg': 'Email or password is incorrect'
+                'msg': 'username or password is incorrect'
             }
         
         token = jwt.encode(

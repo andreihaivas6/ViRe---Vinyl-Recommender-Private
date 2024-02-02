@@ -21,8 +21,6 @@ def get_user(user_id):
 @app_user.route("/user", methods=["GET"])
 @auth_middleware
 def get_users():
-    print("hello 1")
-
     username = request.args.get("username") # /user?username=<username>
     users = user_service.get_users(username)
     return users_schema_without_password.dump(users)
@@ -30,12 +28,9 @@ def get_users():
 @app_user.route("/user", methods=["POST"])
 def create_user():
     try:
-        print("hello 2")
-
         user = user_schema.load(request.json)
         created_user = user_service.create_user(user)
-        print(created_user)
-        print("hello")
+
         if created_user is not None:
             return user_schema_without_password.dump(created_user), 201
         else:
