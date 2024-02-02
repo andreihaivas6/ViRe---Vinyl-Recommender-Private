@@ -2,9 +2,9 @@ from flask import Blueprint
 from flask import request
 from others import Utils
 
-app_sportify = Blueprint("app_spotify", __name__)
+app_spotify = Blueprint("app_spotify", __name__)
 
-@app_sportify.route("/spotify/<string:access_token>", methods=["POST"])
+@app_spotify.route("/spotify/<string:access_token>", methods=["POST"])
 def get_spotify_user_info(access_token: str):
     try:
         user_info = Utils.get_spotify_user_info(access_token)
