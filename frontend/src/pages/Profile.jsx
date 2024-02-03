@@ -2,6 +2,7 @@ import PositionedPage from "./PositionedPage";
 import useWindowDimension from "../helpers/hooks/useWindowDimension";
 import Spinner from "../components/Spinner";
 import {spotifyConnect} from "../helpers/spotifyConnect";
+import {discogConnect, discogSendVerifier} from "../helpers/discogConnect";
 import {useState, useEffect} from "react";
 import {useParams,useSearchParams, useLocation } from 'react-router-dom';
 import { swal, notification, icons } from "../helpers/mySwal";
@@ -15,6 +16,23 @@ export default function Profile() {
     const [buttonStateDiscogs, setButtonStateDiscogs] = useState(0);
     const location = useLocation();
 
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const oauth_verifier = searchParams.get('oauth_verifier');
+        if (oauth_verifier && buttonStateDiscogs === 0) {
+            console.log(oauth_verifier);
+            discogSendVerifier(oauth_verifier).then(
+                res => {
+                    console.log(res);
+                    setButtonStateDiscogs(1);
+                    swal({
+                        title: 'You are now connected to Discog!',
+                        icon: icons.success
+                    })
+                }
+            )
+        }
+    }, [location.search]);
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const code = searchParams.get('code');
@@ -49,6 +67,7 @@ export default function Profile() {
                                     disabled={buttonState !== 0}
                                     onClick={spotifyConnect}>
                                     {buttonState === 0 ? "Sync to Spotify" : "Synced to Spotify!"}
+
                                 </button>
                                 
                                 <hr></hr>
@@ -58,18 +77,15 @@ export default function Profile() {
                                         buttonStateDiscogs === 0 ? "btn btn-primary" : "btn btn-success"
                                     } 
                                     disabled={buttonStateDiscogs !== 0}
-                                    onClick={
-                                        () => {
-                                            // TODO: Connect to Discogs
-                                        }
-                                    }>
+                                    onClick={discogConnect}>
                                     {buttonStateDiscogs === 0 ? "Sync to Discogs" : "Synced to Discogs!"}
+
                                 </button>
 
                             </h2>
                         </div>
                     </div>
-                DIscogs
+                Discogs
             </div>
         } />
     )
