@@ -21,7 +21,43 @@ def get_songs():
         # TODO: get songs from sparql service using song_name
         
         return {
-            "msg": "TODO"
+            "tracks": [
+                {
+                    "album": "21",
+                    "artist": "Adele",
+                    "playlist_id": 1,
+                    "title": "Rolling in the Deep",
+                    "track_id": 1
+                },
+                {
+                    "album": "21",
+                    "artist": "Adele",
+                    "playlist_id": 1,
+                    "title": "Someone Like You",
+                    "track_id": 2
+                },
+                {
+                    "album": "Fearless",
+                    "artist": "Taylor Swift",
+                    "playlist_id": 1,
+                    "title": "You Belong with Me",
+                    "track_id": 3
+                },
+                {
+                    "album": "1989",
+                    "artist": "Taylor Swift",
+                    "playlist_id": 1,
+                    "title": "Blank Space",
+                    "track_id": 4
+                },
+                {
+                    "album": "Folklore",
+                    "artist": "Taylor Swift",
+                    "playlist_id": 1,
+                    "title": "Cardigan",
+                    "track_id": 5
+                }
+            ],
         }
 
     except Exception as e:
