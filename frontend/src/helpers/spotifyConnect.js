@@ -11,7 +11,7 @@ export async function UseSentToken(accessToken) {
     const data_conn = { access_token: accessToken }
     const result = await fetch(API_URL_PLAYLIST + PLAYLIST_PORT + URL_SPOTIFY + accessToken, {
         method: 'POST',
-        body: JSON.stringify(data_conn),
+        bodyF: JSON.stringify(data_conn),
     })
     // setStatus(result.status)
     const data_json = await result.json()

@@ -26,6 +26,7 @@ app.register_blueprint(app_playlist)
 app.register_blueprint(app_playlist_actions)
 app.register_blueprint(app_data)
 app.register_blueprint(app_spotify)
+app.register_blueprint(app_discog)
 # app.register_blueprint(app_friendship)
 
 from models import *
