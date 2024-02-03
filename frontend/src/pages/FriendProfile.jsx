@@ -18,11 +18,11 @@ export default function FriendProfile() {
         navigate(`/playlist/${playlist_id}`)
     }
 
-    // let { user_id } = useParams();
+    let { user_id } = useParams();
     let size = useWindowDimension();
     const transparency = 0.7; // Adjust this value as needed
 
-    let {fetch_data, data, status, error, isPending} = useFetch(PLAYLIST_PORT, 'playlist', 'GET', {immediate: false})
+    let {fetch_data, data, status, error, isPending} = useFetch(PLAYLIST_PORT, 'playlist/user/' + user_id, 'GET', {immediate: false})
     useEffect(() => {
         fetch_data()
     }, [])
@@ -87,7 +87,7 @@ export default function FriendProfile() {
                         isPending ? 
                         <Spinner/> : 
                         <div>
-                            <h2 className="mx-auto my-0  text-dark pt-5">My playlists</h2>
+                            <h2 className="mx-auto my-0  text-dark pt-5">{data.length > 0 ? data[0].user_name : "Empty"}'s playlists</h2>
                             <MDBDataTable
                                 striped
                                 bordered

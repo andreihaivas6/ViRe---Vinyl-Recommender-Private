@@ -18,6 +18,10 @@ class PlaylistRepository:
         playlists = Playlist.query.filter_by(user_id=user_id).all()
         return playlists
     
+    def get_playlists_with_username(self, username: str) -> List[Playlist]:
+        playlists = Playlist.query.filter_by(username=username).all()
+        return playlists
+    
     def get_playlists_shared_with_username(self, username: str) -> List[Playlist]:
         shared_playlists = SharedPlaylist.query.filter_by(shared_with_user_name=username).all()
         playlists = [
