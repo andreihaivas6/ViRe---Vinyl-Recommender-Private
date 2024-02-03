@@ -146,6 +146,8 @@ export default function PlaylistProfile() {
                         }).then(response => {
                             if (response.status === 201) {
                                 notification('Added song to playlist')
+                                // refresh page
+                                fetch_data()
                             } else {
                                 swal({
                                     title: 'Song already in playlist',
