@@ -5,6 +5,8 @@ from flask import request
 
 from typing import List, Dict
 
+import requests
+
 from others import auth_middleware, Utils
 from repositories import PlaylistRepository
 from models import *
@@ -26,6 +28,21 @@ def get_playlist_by_id(playlist_id: int):
 
         if not playlist.imported_from_jspf:
             track_ids = playlist.track_ids
+            ids_build = Utils.build_song_ids(track_ids)
+            query = """
+                SELECT ?songURI ?title ?genre ?duration ?date
+                    WHERE {
+                    VALUES ?songURI {""" + ids_build + """}
+
+                    ?songURI a ns1:Song ;
+                                dc:title ?title ;
+                                dc:date ?date ;
+                                ns1:duration ?duration ;
+                                ns1:genre ?genre .
+                    }
+                """
+            
+            res = requests.post("http://localhost:5003/query", json={"query": query})
             # TODO: get tracks from sparql service using track_ids and append it to playlist for return
             """add field "tracks": [ {}, 
                     {
@@ -63,6 +80,22 @@ def get_playlists_of_user_id():
         for playlist in playlists:
             if not playlist.imported_from_jspf:
                 track_ids = playlist.track_ids
+                # tracks_ids should looks like this: ['songname1', 'songname2', ...]
+                ids_build = Utils.build_song_ids(track_ids)
+                query = """
+                    SELECT ?songURI ?title ?genre ?duration ?date
+                        WHERE {
+                        VALUES ?songURI {""" + ids_build + """}
+
+                        ?songURI a ns1:Song ;
+                                    dc:title ?title ;
+                                    dc:date ?date ;
+                                    ns1:duration ?duration ;
+                                    ns1:genre ?genre .
+                        }
+                    """
+                
+                res = requests.post("http://localhost:5003/query", json={"query": query})
 
                 # TODO: get tracks from sparql service using track_ids and append it to playlist for return
                 """add field "tracks": [ {}, 

@@ -83,3 +83,6 @@ class Utils:
         print(tracks_response)
         return json.dumps(tracks_response) if response.status_code == 200 else {}
        
+    @staticmethod
+    def build_song_ids(ids):
+        return ' '.join([f'<http://purl.org/ontology/mo/#song-{id}>' for id in ids])
