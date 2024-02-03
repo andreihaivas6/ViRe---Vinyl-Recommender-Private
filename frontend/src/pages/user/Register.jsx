@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 
 import useFetch from '../../helpers/hooks/useFetch';
 import { swal, icons } from '../../helpers/mySwal';
-import { URL_REGISTER } from '../../config/config';
+import {URL_REGISTER, USER_PORT} from '../../config/config';
 
 
 export default function Register() {
@@ -36,7 +36,7 @@ export default function Register() {
     }
 
 
-    let {fetch_data, data, status} = useFetch(URL_REGISTER, 'POST',
+    let {fetch_data, data, status} = useFetch(USER_PORT, URL_REGISTER, 'POST',
         {
         given_body:{
         'username': username,

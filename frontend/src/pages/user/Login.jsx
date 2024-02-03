@@ -9,7 +9,7 @@ import { Link } from "react-router-dom"
 import { useEffect, useState } from 'react';
 
 import useFetch from '../../helpers/hooks/useFetch';
-import { URL_LOGIN } from '../../config/config';
+import {URL_LOGIN, USER_PORT} from '../../config/config';
 import { swal, icons } from '../../helpers/mySwal';
 import jwt_decode from "jwt-decode";
 
@@ -29,7 +29,7 @@ export default function Login() {
         setPassword(e.target.value);
     }
     
-    let {fetch_data, data, status} = useFetch(URL_LOGIN, 'POST', {given_body:{
+    let {fetch_data, data, status} = useFetch(USER_PORT, URL_LOGIN, 'POST', {given_body:{
         'username': username,
         'password_hash': password
     }, immediate: false}) 
@@ -61,9 +61,6 @@ export default function Login() {
             })
             localStorage.setItem('username', jwt_decode(data.data).username)
 
-
-
-
             setSent(true)
         } 
         else {
@@ -80,6 +77,7 @@ export default function Login() {
             
             setErrorName(msg)
             setPassword('')
+            console.log(data)
         }
     }, [data])
 

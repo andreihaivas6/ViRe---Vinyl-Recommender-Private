@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 import Spinner from "../../components/Spinner";
 import useFetch from "../../helpers/hooks/useFetch";
 import { swal, icons } from "../../helpers/mySwal";
-import { URL_CONFIRMATION_EMAIL } from "../../config/config";
+import {URL_CONFIRMATION_EMAIL, USER_PORT} from "../../config/config";
 
 export default function ConfirmationEmail() {
     const [searchParams] = useSearchParams();
@@ -15,7 +15,7 @@ export default function ConfirmationEmail() {
     const token = searchParams.get('token')
     const request_url = `${URL_CONFIRMATION_EMAIL}${uid}/${token}/`
 
-    let {data, status} = useFetch(request_url, 'POST', {}) 
+    let {data, status} = useFetch(USER_PORT, request_url, 'POST', {})
     
     useEffect(() => {
         if(status === 0) {

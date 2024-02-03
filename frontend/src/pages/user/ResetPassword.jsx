@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import img from '../../assets/images/password.jpg'
-import { URL_CHOOSE_NEW_PASSWORD } from '../../config/config';
+import {URL_CHOOSE_NEW_PASSWORD, USER_PORT} from '../../config/config';
 import useFetch from '../../helpers/hooks/useFetch';
 import { icons, swal } from '../../helpers/mySwal';
 
@@ -23,7 +23,7 @@ export default function ResetPassword() {
     const uid = searchParams.get('uid') 
     const token = searchParams.get('token') 
 
-    let {fetch_data, data, status} = useFetch(URL_CHOOSE_NEW_PASSWORD, 'POST', {
+    let {fetch_data, data, status} = useFetch(USER_PORT, URL_CHOOSE_NEW_PASSWORD, 'POST', {
         immediate: false,
         given_body: {
             'password': password,

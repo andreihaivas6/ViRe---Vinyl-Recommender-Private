@@ -1,35 +1,31 @@
 import useFetch from "./hooks/useFetch";
-import {URL_SPOTIFY} from "../config/config";
-import {useEffect} from "react";
+import {API_URL, PLAYLIST_PORT, URL_SPOTIFY} from "../config/config";
+import React, {useEffect, useState} from 'react';
+import {icons, swal} from "./mySwal";
 
 const clientId = "300cdf3993c94b429d91a6e4338a5aa7"; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
-// export function sendToken(access_token) {
-//     const data_conn = { access_token: access_token };
-//     const {fetch_data, isPending, data} = useFetch(URL_SPOTIFY, 'POST', {
-//         needs_auth:false,
-//         immediate:false,
-//         data: [data_conn]
-//     })
-//     useEffect(() => {
-//         // This effect will be called when the component using useTokenSender mounts or when access_token changes
-//         fetch_data(); // You may need to adjust this based on your useFetch implementation
-//     }, [access_token, fetch_data]);
-//
-//     return { isPending, data };
-// }
+export async function UseSentToken(accessToken) {
+    const data_conn = { access_token: accessToken }
+    const result = await fetch(API_URL + PLAYLIST_PORT + URL_SPOTIFY + "/" + accessToken, {
+        method: 'POST',
+        body: JSON.stringify(data_conn),
+    })
+    // setStatus(result.status)
+    const data_json = await result.json()
+
+    return { data: data_json};
+}
+
 export async function spotifyConnect() {
 
     if (!code) {
         await redirectToAuthCodeFlow(clientId);
     } else {
         const accessToken = await getAccessToken(clientId, code);
-        // const profile = await fetchProfile(accessToken);
-        // sendToken(accessToken);
-        console.log(accessToken)
-        console.log("hello");
+        return await UseSentToken(accessToken);
     }
 }
 
@@ -84,29 +80,11 @@ export async function getAccessToken(clientId, code) {
         body: params
     });
 
-    const { access_token } = await result.json();
-    console.log("access token")
-    console.log(access_token)
-    return access_token;
-}
+    const { access_token } =  await result.json().then(data => {
+        console.log("hsllo: ",data)
 
-async function fetchProfile(token) {
-    const result = await fetch("https://api.spotify.com/v1/me", {
-        method: "GET", headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await result.json();
-    console.log(data)
+        return data;
 
-    const result_playlist = await fetch("", {
-        method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
-    const data_playlist = await result_playlist.json();
-    console.log(data_playlist)
-
-    const result_playlist_tracks = await fetch(`https://api.spotify.com/v1/playlists/${data_playlist['items'][0]['id']}/tracks`, {
-        method: "GET", headers: { Authorization: `Bearer ${token}` }
-    });
-    const data_playlist_track = await result_playlist_tracks.json();
-    console.log(data_playlist_track)
-    return data;
+    return await access_token;
 }

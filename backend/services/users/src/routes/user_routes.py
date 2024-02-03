@@ -39,7 +39,7 @@ def create_user():
             }, 400
     
     except Exception as e:
-        print(e)
+        print
         return {
             "msg": "Could not create user",
             "error": str(e)

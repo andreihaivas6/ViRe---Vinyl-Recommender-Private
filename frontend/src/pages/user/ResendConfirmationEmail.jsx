@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import RightImg from '../../assets/images/email.png'
 import useFetch from "../../helpers/hooks/useFetch";
 import { icons, swal } from "../../helpers/mySwal";
-import { URL_RESEND_CONFIRMATION_EMAIL } from "../../config/config";
+import { URL_RESEND_CONFIRMATION_EMAIL, USER_PORT } from "../../config/config";
 
 export default function ResendConfirmationEmail() {
     const [email, setEmail] = useState("");
@@ -23,7 +23,7 @@ export default function ResendConfirmationEmail() {
     const token = searchParams.get('token') 
     const url = `${URL_RESEND_CONFIRMATION_EMAIL}${uid}/${token}/${email}/`
 
-    let {fetch_data, data, status} = useFetch(url, 'POST', {
+    let {fetch_data, data, status} = useFetch(USER_PORT, url, 'POST', {
         immediate: false
     }) 
 

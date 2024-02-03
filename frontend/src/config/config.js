@@ -1,8 +1,11 @@
 const WIDTH_SIDEBAR = 230
 const WIDTH_FOR_RESPONSIVENESS = 770
 
-const API_URL = "http://127.0.0.1:5000/"
+const API_URL = "http://127.0.0.1:"
 
+export const USER_PORT = "5000/"
+export const RECOMMENDATION_PORT = "5002/"
+export const PLAYLIST_PORT = "5001/"
 export const URL_SPOTIFY = 'spotify/'
 const URL_USERS = 'users/'
 const URL_LOGIN = 'user/login'

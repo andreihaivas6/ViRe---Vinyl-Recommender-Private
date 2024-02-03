@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { API_URL, URL_REFRESH } from '../../config/config';
 import { swal, icons } from '../mySwal';
 
-export default function useFetch(url, method_name, {
+export default function useFetch(service_port, url, method_name, {
         given_body=null, 
         needs_auth=false,
         immediate=true,
@@ -20,7 +20,7 @@ export default function useFetch(url, method_name, {
 
     const navigation = useNavigate();
 
-    let complete_url = API_URL + url
+    let complete_url = API_URL + service_port + url
 
     const fetch_data = (async () => {
         let headers = {

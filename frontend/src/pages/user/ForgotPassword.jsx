@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import img from '../../assets/images/password_forgot.jpg'
-import { URL_FORGOT_PASSWORD } from '../../config/config';
+import {URL_FORGOT_PASSWORD, USER_PORT} from '../../config/config';
 import useFetch from '../../helpers/hooks/useFetch';
 import { icons, swal } from '../../helpers/mySwal';
 
@@ -14,7 +14,7 @@ export default function ForgotPassword() {
         setEmail(e.target.value);
     }
 
-    let {fetch_data, data, status} = useFetch(URL_FORGOT_PASSWORD, 'POST', {
+    let {fetch_data, data, status} = useFetch(USER_PORT, URL_FORGOT_PASSWORD, 'POST', {
         immediate: false,
         given_body: {
             'email': email
