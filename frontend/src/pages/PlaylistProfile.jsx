@@ -99,13 +99,73 @@ export default function PlaylistProfile() {
         rows,
     };
 
+    let [tracks, setTracks] = useState([])
+    const columnsMusic = [
+        {
+            label: 'Title',
+            field: 'title',
+            sort: 'asc',
+        },
+        {
+            label: 'Artist',
+            field: 'artist',
+            sort: 'asc',
+        },
+        {
+            label: 'Add',
+            field: 'add', // New column for buttons
+            sort: 'disabled',
+        }
+    ]
+
+    let [tracks_rows, setTracksRows] = useState([])
+    useEffect(() => {
+        console.log(tracks)
+        // console.log(tracks.tracks.length)
+        let tracks_rows_temp = []
+        if (tracks.tracks !== undefined && tracks.tracks.length > 0) {
+            for (let index in tracks.tracks) {
+                let track = tracks.tracks[index]
+                tracks_rows_temp.push({
+                    title: track.title,
+                    artist: track.artist,
+                    add: (<button className="btn btn-primary" onClick={() => {
+                        let headers = {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        }
+                        const user = JSON.parse(localStorage.getItem('user'))
+                        headers['Authorization'] = 'Bearer ' + user.data
+                        fetch(API_URL_PLAYLIST + PLAYLIST_PORT + 'playlist/' + playlist_id + '/track/' + track.track_id, {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({
+                                "playlist_id": playlist_id,
+                                "song_id": track.id
+                            })
+                        }).then(response => {
+                            if (response.status === 201) {
+                                notification('Added song to playlist')
+                            } else {
+                                swal({
+                                    title: 'Song already in playlist',
+                                    icon: icons.info
+                                })
+                            }
+                        })
+                    }}>Add</button>)
+                })
+            }
+            setTracksRows(tracks_rows_temp)
+        }
+    }, [tracks])
+
+
     return (
         <PositionedPage page={
             <div style={{backgroundColor: `rgba(255, 255, 255, ${transparency})`, borderRadius:25, padding: 20}}>
                <div className="text-center">
                 {/* a flex with 2 components: Share with *dropdown* with usernames from fetch_friends and a button with a request */}
-                
-                    
                     {
                         isPending ? 
                         <Spinner/> : 
@@ -113,6 +173,50 @@ export default function PlaylistProfile() {
                             <div>
                                 <h2 className="mx-auto my-0  text-dark pt-5">{data.playlist_name}</h2>
                                 <h4>{data.playlist_description}</h4>
+                                <hr></hr>
+                                <div className="d-flex justify-content-between">
+                                    <input type="text" className="form-control" id="search" placeholder="Search for a song" style={{marginTop:9}}></input>
+                                    <button className="btn btn-primary" onClick={() => {
+                                        let search = document.getElementById('search').value
+                                        
+                                        let headers = {
+                                            'Accept': 'application/json',
+                                            'Content-Type': 'application/json',
+                                        }
+                                        const user = JSON.parse(localStorage.getItem('user'))
+                                        headers['Authorization'] = 'Bearer ' + user.data
+                                        // get request to http://127.0.0.1:5000/songs?name="ceva"
+                                        fetch(API_URL_PLAYLIST + PLAYLIST_PORT + 'songs?name=' + search, {
+                                            method: 'GET',
+                                            headers: headers
+                                        }).then(response => response.json())
+                                        .then(data => {
+                                            setTracks(data)
+                                        })
+                                    }}>Search</button>
+                                </div>
+                                {
+                                    tracks.tracks !== undefined && tracks.tracks.length > 0 ?
+                                    <div>
+                                        {/* <h3 className="mx-auto my-0  text-dark pt-2">Search results</h3> */}
+                                        <hr></hr>
+                                        <MDBDataTable
+                                            striped
+                                            bordered
+                                            hover
+                                            data={{
+                                                columns: columnsMusic,
+                                                rows: tracks_rows
+                                            }}
+                                            noBottomColumns
+                                            entriesOptions={[5, 10, 20, 50, 100]}
+                                            entries={5}
+                                        />
+                                    </div>
+                                    :
+                                    <div></div>
+                                }
+                                
                                 <hr></hr>
                                     <MDBDataTable
                                         striped
