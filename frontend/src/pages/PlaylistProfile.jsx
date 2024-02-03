@@ -3,13 +3,15 @@ import useWindowDimension from "../helpers/hooks/useWindowDimension";
 import '../assets/styles/friends.css'
 import {MDBDataTable} from "mdbreact";
 import useFetch from "../helpers/hooks/useFetch";
-import {PLAYLIST_PORT, USER_PORT} from "../config/config";
+import {API_URL_PLAYLIST, PLAYLIST_PORT, USER_PORT} from "../config/config";
 import { useEffect } from "react";
 // import { Spinner } from "react-bootstrap";
 import Spinner from "../components/Spinner";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { getUserId } from "../helpers/utils";
+import { useState } from "react";
+import { notification, swal, icons } from "../helpers/mySwal";
 
 
 export default function PlaylistProfile() {
@@ -26,6 +28,18 @@ export default function PlaylistProfile() {
     useEffect(() => {
         fetch_data()
     }, [])
+
+    let fetch_friends = useFetch(USER_PORT, 'friends', 'GET', {immediate: true})
+
+    const [username, setUsername] = useState('')
+
+    let fetch_share_playlist = useFetch(PLAYLIST_PORT, 'playlist/share', 'POST', {
+        immediate: false,
+        given_body: {
+            "playlist_id": playlist_id,
+            "shared_with_user_name": username
+        }
+    })
 
     const columns = [
         {
@@ -85,27 +99,190 @@ export default function PlaylistProfile() {
         rows,
     };
 
+    let [tracks, setTracks] = useState([])
+    const columnsMusic = [
+        {
+            label: 'Title',
+            field: 'title',
+            sort: 'asc',
+        },
+        {
+            label: 'Artist',
+            field: 'artist',
+            sort: 'asc',
+        },
+        {
+            label: 'Add',
+            field: 'add', // New column for buttons
+            sort: 'disabled',
+        }
+    ]
+
+    let [tracks_rows, setTracksRows] = useState([])
+    useEffect(() => {
+        console.log(tracks)
+        // console.log(tracks.tracks.length)
+        let tracks_rows_temp = []
+        if (tracks.tracks !== undefined && tracks.tracks.length > 0) {
+            for (let index in tracks.tracks) {
+                let track = tracks.tracks[index]
+                tracks_rows_temp.push({
+                    title: track.title,
+                    artist: track.artist,
+                    add: (<button className="btn btn-primary" onClick={() => {
+                        let headers = {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        }
+                        const user = JSON.parse(localStorage.getItem('user'))
+                        headers['Authorization'] = 'Bearer ' + user.data
+                        fetch(API_URL_PLAYLIST + PLAYLIST_PORT + 'playlist/' + playlist_id + '/track/' + track.track_id, {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({
+                                "playlist_id": playlist_id,
+                                "song_id": track.id
+                            })
+                        }).then(response => {
+                            if (response.status === 201) {
+                                notification('Added song to playlist')
+                                // refresh page
+                                fetch_data()
+                            } else {
+                                swal({
+                                    title: 'Song already in playlist',
+                                    icon: icons.info
+                                })
+                            }
+                        })
+                    }}>Add</button>)
+                })
+            }
+            setTracksRows(tracks_rows_temp)
+        }
+    }, [tracks])
+
+
     return (
         <PositionedPage page={
             <div style={{backgroundColor: `rgba(255, 255, 255, ${transparency})`, borderRadius:25, padding: 20}}>
                <div className="text-center">
-                    
+                {/* a flex with 2 components: Share with *dropdown* with usernames from fetch_friends and a button with a request */}
                     {
                         isPending ? 
                         <Spinner/> : 
-                        <div>
-                            <h2 className="mx-auto my-0  text-dark pt-5">{data.playlist_name}</h2>
-                            <h4>{data.playlist_description}</h4>
-                            <MDBDataTable
-                                striped
-                                bordered
-                                hover
-                                data={data_to_table}
-                                noBottomColumns
-                                entriesOptions={[5, 10, 20, 50, 100]}
-                                entries={5}
-                            />
-                        </div>
+                        data.user_id == getUserId() ?
+                            <div>
+                                <h2 className="mx-auto my-0  text-dark pt-5">{data.playlist_name}</h2>
+                                <h4>{data.playlist_description}</h4>
+                                <hr></hr>
+                                <div className="d-flex justify-content-between">
+                                    <input type="text" className="form-control" id="search" placeholder="Search for a song" style={{marginTop:9}}></input>
+                                    <button className="btn btn-primary" onClick={() => {
+                                        let search = document.getElementById('search').value
+                                        
+                                        let headers = {
+                                            'Accept': 'application/json',
+                                            'Content-Type': 'application/json',
+                                        }
+                                        const user = JSON.parse(localStorage.getItem('user'))
+                                        headers['Authorization'] = 'Bearer ' + user.data
+                                        // get request to http://127.0.0.1:5000/songs?name="ceva"
+                                        fetch(API_URL_PLAYLIST + PLAYLIST_PORT + 'songs?name=' + search, {
+                                            method: 'GET',
+                                            headers: headers
+                                        }).then(response => response.json())
+                                        .then(data => {
+                                            setTracks(data)
+                                        })
+                                    }}>Search</button>
+                                </div>
+                                {
+                                    tracks.tracks !== undefined && tracks.tracks.length > 0 ?
+                                    <div>
+                                        {/* <h3 className="mx-auto my-0  text-dark pt-2">Search results</h3> */}
+                                        <hr></hr>
+                                        <MDBDataTable
+                                            striped
+                                            bordered
+                                            hover
+                                            data={{
+                                                columns: columnsMusic,
+                                                rows: tracks_rows
+                                            }}
+                                            noBottomColumns
+                                            entriesOptions={[5, 10, 20, 50, 100]}
+                                            entries={5}
+                                        />
+                                    </div>
+                                    :
+                                    <div></div>
+                                }
+                                
+                                <hr></hr>
+                                    <MDBDataTable
+                                        striped
+                                        bordered
+                                        hover
+                                        data={data_to_table}
+                                        noBottomColumns
+                                        entriesOptions={[5, 10, 20, 50, 100]}
+                                        entries={5}
+                                    />
+                            <div className="d-flex justify-content-between">
+                                <div className="m-3">
+                                    Share with:
+                                    </div>
+                                <select className="m-3 form-select" aria-label="Default select example" id="share_with">
+                                    <option value="0">Select a friend</option>
+                                    {fetch_friends.data.map((friend) => {
+                                        return <option value={friend.username}>{friend.username}</option>
+                                    })}
+                                </select>
+                                <button className="m-3 btn btn-primary" onClick={() => {
+                                    // setUsername(document.getElementById('share_with').value)
+                                    const user = JSON.parse(localStorage.getItem('user'))
+                                    let headers = {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json',
+                                    }
+                                    headers['Authorization'] = 'Bearer ' + user.data
+                                    fetch(API_URL_PLAYLIST + PLAYLIST_PORT + 'playlist/share', {
+                                        method: 'POST',
+                                        headers: headers,
+                                        body: JSON.stringify({
+                                            "playlist_id": playlist_id,
+                                            "shared_with_user_name": document.getElementById('share_with').value
+                                        })
+                                    }).then(response => {
+                                        console.log(response.status)
+                                        if (response.status === 201) {
+                                            notification('Shared playlist')
+                                        } else {
+                                            swal({
+                                                title: 'Already shared',
+                                                icon: icons.info
+                                            })
+                                        }
+                                    })
+                                }}>Share playlist</button>
+                                </div>
+                            </div>
+                             : 
+                            <div>
+                                <h2 className="mx-auto my-0  text-dark pt-5">{data.playlist_name}</h2>
+                                <h4>{data.playlist_description}</h4>
+                                <hr></hr>
+                                <MDBDataTable
+                                    striped
+                                    bordered
+                                    hover
+                                    data={data_to_table}
+                                    noBottomColumns
+                                    entriesOptions={[5, 10, 20, 50, 100]}
+                                    entries={5}
+                                />
+                            </div>
                     }
                 </div>
             </div>
