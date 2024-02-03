@@ -5,12 +5,12 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"
 
-import { API_URL, URL_REFRESH } from '../../config/config';
+import { API_URL, API_URL_PLAYLIST, API_URL_USER, API_URL_RECOMMENDATION, API_URL_SPARQL, URL_REFRESH, USER_PORT, PLAYLIST_PORT, RECOMMENDATION_PORT, SPARQL_PORT } from '../../config/config';
 import { swal, icons } from '../mySwal';
 
 export default function useFetch(service_port, url, method_name, {
         given_body=null, 
-        needs_auth=false,
+        needs_auth=true,
         immediate=true,
     }) {
     const [isPending, setIsPending] = useState(true)
@@ -19,8 +19,19 @@ export default function useFetch(service_port, url, method_name, {
     const [status, setStatus] = useState(0)
 
     const navigation = useNavigate();
-
-    let complete_url = API_URL + service_port + url
+    
+    let api_url = 0
+    if (service_port === USER_PORT) {
+        api_url = API_URL_USER
+    } else if (service_port === PLAYLIST_PORT) {
+        api_url = API_URL_PLAYLIST
+    } else if (service_port === RECOMMENDATION_PORT) {
+        api_url = API_URL_RECOMMENDATION
+    } else if (service_port === SPARQL_PORT) {
+        api_url = API_URL_SPARQL
+    }
+    let complete_url = api_url + service_port + url
+    console.log(complete_url)
 
     const fetch_data = (async () => {
         let headers = {
@@ -71,6 +82,7 @@ async function getAuth(headers, navigation) {
             logout(navigation)
         }
     }
+    headers['Authorization'] = 'Bearer ' + user.data
     return headers
 }
 

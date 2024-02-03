@@ -44,7 +44,7 @@ export default function Register() {
         'password_hash': password,
         },
         needs_auth: false,
-        immediate: true})
+        immediate: false})
 
     const handleRegister = () => {
         fetch_data()

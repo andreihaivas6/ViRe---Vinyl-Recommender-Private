@@ -70,7 +70,36 @@ def get_playlists_of_user_id():
         return {
             "msg": "Could not get playlists"
         }, 400
-    
+
+# get playlists for a given user_id (from path) - /playlist/user/<int:user_id>
+@app_playlist.route("/playlist/user/<int:user_id>", methods=["GET"])
+@auth_middleware
+def get_playlists_of_user_id_path(user_id: int):
+    try:
+        playlists = playlist_repository.get_playlists_of_user_id(user_id)
+
+        playlists_to_return = list()
+        for playlist in playlists:
+            if not playlist.imported_from_jspf:
+                track_ids = playlist.track_ids
+
+                # TODO: get tracks from sparql service using track_ids and append it to playlist for return
+                # add field "tracks": [ {}, {}, ...] 
+
+                playlists_to_return.append(playlist.to_json())
+            else:
+                playlists_to_return.append(
+                    playlist_repository.add_track_to_jspf_playlist(playlist)
+                )
+
+        return playlists_to_return
+    except Exception as e:
+        print(e)
+        return {
+            "msg": "Could not get playlists"
+        }, 400
+        
+
 # create playlist
 @app_playlist.route("/playlist", methods=["POST"])
 @auth_middleware

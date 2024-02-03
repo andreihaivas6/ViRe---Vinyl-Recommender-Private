@@ -1,11 +1,16 @@
 const WIDTH_SIDEBAR = 230
 const WIDTH_FOR_RESPONSIVENESS = 770
 
-const API_URL = "http://127.0.0.1:"
+const API_URL = "http://127.0.0.1:" // s-au facut request-uri cu asta catre user
+export const API_URL_USER = "http://127.0.0.1:"
+export const API_URL_PLAYLIST = "http://127.0.0.1:"
+export const API_URL_RECOMMENDATION = "http://127.0.0.1:"
+export const API_URL_SPARQL = "http://127.0.0.1:"
 
 export const USER_PORT = "5000/"
-export const RECOMMENDATION_PORT = "5002/"
 export const PLAYLIST_PORT = "5001/"
+export const RECOMMENDATION_PORT = "5002/"
+export const SPARQL_PORT = "5003/"
 export const URL_SPOTIFY = 'spotify/'
 const URL_USERS = 'users/'
 const URL_LOGIN = 'user/login'

@@ -29,12 +29,17 @@ export default function Login() {
         setPassword(e.target.value);
     }
     
-    let {fetch_data, data, status} = useFetch(USER_PORT, URL_LOGIN, 'POST', {given_body:{
-        'username': username,
-        'password_hash': password
-    }, immediate: false}) 
+    let {fetch_data, data, status} = useFetch(USER_PORT, URL_LOGIN, 'POST', {
+        given_body:{
+            'username': username,
+            'password_hash': password
+        }, 
+        immediate: false,
+        needs_auth: false
+    }) 
 
     const handleLogin = () => {
+        console.log('login pressed')
         fetch_data()
     }
 

@@ -1,5 +1,5 @@
 import useFetch from "./hooks/useFetch";
-import {API_URL, PLAYLIST_PORT, URL_SPOTIFY} from "../config/config";
+import {API_URL, API_URL_PLAYLIST, PLAYLIST_PORT, URL_SPOTIFY} from "../config/config";
 import React, {useEffect, useState} from 'react';
 import {icons, swal} from "./mySwal";
 
@@ -9,7 +9,7 @@ const code = params.get("code");
 
 export async function UseSentToken(accessToken) {
     const data_conn = { access_token: accessToken }
-    const result = await fetch(API_URL + PLAYLIST_PORT + URL_SPOTIFY + accessToken, {
+    const result = await fetch(API_URL_PLAYLIST + PLAYLIST_PORT + URL_SPOTIFY + accessToken, {
         method: 'POST',
         bodyF: JSON.stringify(data_conn),
     })

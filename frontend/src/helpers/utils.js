@@ -7,7 +7,7 @@ function isLoggedIn() {
 
 function getUserId() {
     const user = JSON.parse(localStorage.getItem('user'))
-    return jwt_decode(user.access).id
+    return jwt_decode(user.data).id
 }
 
 export {

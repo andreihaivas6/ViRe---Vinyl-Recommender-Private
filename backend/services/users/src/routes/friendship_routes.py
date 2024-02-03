@@ -43,6 +43,8 @@ def get_friends_of_user_id():
 @auth_middleware
 def create_friendship():
     try:
+        # delete all friendships from DB
+        # Friendship.query.delete()
         friendship = friendship_schema.load(request.json)
         created_friendship = friendship_service.create_friendship(friendship)
 
@@ -53,6 +55,7 @@ def create_friendship():
         else:
             return friendship_schema.dump(created_friendship), 201
     except Exception as e:
+        print(e)
         return {
             "msg": "Could not create friendship"
         }, 400
