@@ -22,7 +22,7 @@ export default function useFetch(service_port, url, method_name, {
     
     let api_url = 0
     if (service_port === USER_PORT) {
-        api_url = API_URL
+        api_url = API_URL_USER
     } else if (service_port === PLAYLIST_PORT) {
         api_url = API_URL_PLAYLIST
     } else if (service_port === RECOMMENDATION_PORT) {
@@ -31,6 +31,7 @@ export default function useFetch(service_port, url, method_name, {
         api_url = API_URL_SPARQL
     }
     let complete_url = api_url + service_port + url
+    console.log(complete_url)
 
     const fetch_data = (async () => {
         let headers = {

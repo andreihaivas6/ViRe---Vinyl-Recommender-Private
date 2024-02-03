@@ -4,11 +4,7 @@ export default function BarButtons() {
     return (
         <div>   
 
-                <Button 
-                    link_to={'/profile'}
-                    icon={<i className="bi bi-robot"></i>} 
-                    text_button={'Profile'}
-                />
+                
 
                 <Button 
                     link_to={'/preferences'}
@@ -25,20 +21,25 @@ export default function BarButtons() {
                     icon={<i className="bi bi-people-fill"></i>}
                     text_button={'New Friends'}
                 />
-                <Button
-                    link_to={'/recommendation'}
-                    icon={<i className="bi bi-people-fill"></i>}
-                    text_button={'Recommendation'}
-                />
-                <Button 
+                {/* <Button 
                     link_to={'/vinyls'}
                     icon={<i className="bi bi-newspaper"></i>} 
                     text_button={'Search Vinyls'}
-                />
+                /> */}
                 <Button
                     link_to={'/playlists'}
                     icon={<i className="bi bi-newspaper"></i>}
                     text_button={'Playlists'}
+                />
+                <Button 
+                    link_to={'/profile'}
+                    icon={<i className="bi bi-robot"></i>} 
+                    text_button={'External Apps'}
+                />
+                <Button
+                    link_to={'/recommendation'}
+                    icon={<i className="bi bi-people-fill"></i>}
+                    text_button={'Recommendation'}
                 />
         </div>
     )
