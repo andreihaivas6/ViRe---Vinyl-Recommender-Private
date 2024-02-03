@@ -6,8 +6,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  overflow: overlay;
-  
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  overflow-y: auto; /* Display vertical scrollbar when necessary */
   
 }
 

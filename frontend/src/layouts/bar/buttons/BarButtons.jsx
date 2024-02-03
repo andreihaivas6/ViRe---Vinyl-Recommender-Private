@@ -2,7 +2,13 @@ import Button from "./Button"
 
 export default function BarButtons() {
     return (
-        <div>
+        <div>   
+
+                <Button 
+                    link_to={'/profile'}
+                    icon={<i className="bi bi-robot"></i>} 
+                    text_button={'Profile'}
+                />
 
                 <Button 
                     link_to={'/preferences'}
@@ -12,12 +18,12 @@ export default function BarButtons() {
                 <Button 
                     link_to={'/friends'}
                     icon={<i className="bi bi-people-fill"></i>} 
-                    text_button={'Friends'}
+                    text_button={'My Friends'}
                 />
                 <Button
                     link_to={'/search-friends'}
                     icon={<i className="bi bi-people-fill"></i>}
-                    text_button={'Search Friends'}
+                    text_button={'New Friends'}
                 />
                 <Button
                     link_to={'/recommendation'}

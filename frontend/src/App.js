@@ -21,6 +21,7 @@ import Recommendations from "./pages/Recommendations";
 import Vinyls from "./pages/Vinyls";
 import SearchFriends from "./pages/SearchFriends";
 import Playlists from "./pages/Playlists";
+import Profile from './pages/Profile';
 
 export default function App() {  
     return (
@@ -38,6 +39,7 @@ export default function App() {
                 <Route path='/recommendation' element={<PrivateRoute><Recommendations/></PrivateRoute>}></Route>
                 <Route path='/vinyls' element={<PrivateRoute><Vinyls/></PrivateRoute>}></Route>
                 <Route path='/playlists' element={<PrivateRoute><Playlists/></PrivateRoute>}></Route>
+                <Route path='/profile' element={<PrivateRoute><Profile/></PrivateRoute>}></Route>
 
                 {/* <Route path='/profile' element={<PrivateRoute><Profile/></PrivateRoute>}></Route> */}
 

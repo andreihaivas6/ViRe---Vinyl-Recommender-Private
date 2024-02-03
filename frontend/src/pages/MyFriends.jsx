@@ -2,9 +2,7 @@ import PositionedPage from "./PositionedPage";
 import useWindowDimension from "../helpers/hooks/useWindowDimension";
 import '../assets/styles/friends.css'
 import {MDBDataTable} from "mdbreact";
-import {spotifyConnect} from "../helpers/spotifyConnect";
-import {useState, useEffect} from "react";
-import {useParams,useSearchParams, useLocation } from 'react-router-dom';
+
 
 function handleViewProfile(index) {
 }
@@ -85,23 +83,11 @@ export default function Friends() {
         rows,
     };
 
-    const [buttonState, setButtonState] = useState(0);
-    const location = useLocation();
-
-    useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        const code = searchParams.get('code');
-
-        console.log('Code changed:', code);
-        if (code && buttonState === 0) {
-            spotifyConnect(code);
-            setButtonState(1);
-        }
-    }, [location.search]);
+    
                 
     return (
         <PositionedPage page={
-            <div style={{backgroundColor: `rgba(255, 255, 255, ${transparency})`, borderRadius: 25}}>
+            <div style={{backgroundColor: `rgba(255, 255, 255, ${transparency})`, borderRadius: 25, padding: 20}}>
                 <div className="text-center">
                     <MDBDataTable
                         striped
@@ -111,26 +97,7 @@ export default function Friends() {
                     />
 
                 </div>
-                    <div style={{backgroundColor: `rgba(255, 255, 255, ${transparency})`, borderRadius:25}}>
-                        <div className="text-center">
-                            <h1 className="mx-auto my-0 text-uppercase text-dark pt-5">Demo</h1>
-                            <h2 className="text-dark mx-auto mt-2 mb-5 pt-5">
-                                This is a demo page.
-                                <h1>Display your Spotify profile data</h1>
-                                <button 
-                                    className={
-                                        buttonState === 0 ? "btn btn-primary" : "btn btn-success"
-                                    } 
-                                    disabled={buttonState !== 0}
-                                
-                                onClick={spotifyConnect}>
-                                    
-                                    {buttonState === 0 ? "Connect" : "Connected"}
-                                </button>
-
-                            </h2>
-                        </div>
-                    </div>
+                    
             </div>
         }/>
     )

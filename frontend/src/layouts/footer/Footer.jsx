@@ -13,7 +13,7 @@ export default function Footer() {
             left: left_position,
             bottom:0,
             // paddingBottom: 0,
-            width: dimension.width - left_position
+            width: dimension.width - left_position - 20
         }}>
                 <div className="container p-2 pb-0">
                     <section >

@@ -16,7 +16,7 @@ export default function Bar() {
     else {
         return (
             <div className = "myBar">
-                <nav className="navbar navbar-expand-lg navbar-light bg-dark text-white" style={{width: dimension.width}}>
+                <nav className="navbar navbar-expand-lg navbar-light bg-dark text-white" style={{width: dimension.width - 20}}>
                     <div className="container-fluid">
                         <svg className="bi me-2" width="40" height="32"/>
                         <span className="fs-4"></span> 

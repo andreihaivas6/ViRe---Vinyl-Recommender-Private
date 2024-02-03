@@ -17,9 +17,9 @@ export default function PositionedPage({page}) {
             <div className="my-container" style={{
                 position: "relative", 
                 left: left_position, 
-                width: dimension.width - left_position, 
-                // minHeight: dimension.width >= WIDTH_FOR_RESPONSIVENESS ? "140%" : "72.8vh",
-                // paddingBottom: 70.8
+                width: dimension.width - left_position - 20, 
+                minHeight: dimension.width >= WIDTH_FOR_RESPONSIVENESS ? "70.8vh" : "72.8vh",
+                padding: 20,
             }}>
                 <div style={{padding: 20}}>{page}</div>
                 

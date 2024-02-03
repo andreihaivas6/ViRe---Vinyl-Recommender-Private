@@ -10,7 +10,7 @@ export default function Recommendations() {
 
     return (
         <PositionedPage page={
-            <div style={{backgroundColor: `rgba(255, 255, 255, ${transparency})`, borderRadius:25}}>
+            <div style={{backgroundColor: `rgba(255, 255, 255, ${transparency})`, borderRadius:25, padding: 20}}>
                 <div className="text-center">
                     <h1 className="mx-auto my-0 text-uppercase text-dark pt-5">Demo</h1>
                     <p className="text-dark mx-auto mt-2 mb-5 pt-5">
