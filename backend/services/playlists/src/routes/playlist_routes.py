@@ -27,7 +27,16 @@ def get_playlist_by_id(playlist_id: int):
         if not playlist.imported_from_jspf:
             track_ids = playlist.track_ids
             # TODO: get tracks from sparql service using track_ids and append it to playlist for return
-            # add field "tracks": [ {}, {}, ...] 
+            """add field "tracks": [ {}, 
+                    {
+                        "title": "title",
+                        "artist": "artist",
+                        "album": "album",
+                        "duration": "duration",
+                        "genre": "genre",
+                        "date": "date"
+                    }, ...] 
+                """
             return playlist.to_json()
         
         else:
@@ -56,7 +65,16 @@ def get_playlists_of_user_id():
                 track_ids = playlist.track_ids
 
                 # TODO: get tracks from sparql service using track_ids and append it to playlist for return
-                # add field "tracks": [ {}, {}, ...] 
+                """add field "tracks": [ {}, 
+                    {
+                        "title": "title",
+                        "artist": "artist",
+                        "album": "album",
+                        "duration": "duration",
+                        "genre": "genre",
+                        "date": "date"
+                    }, ...] 
+                """
 
                 playlists_to_return.append(playlist.to_json())
             else:
@@ -84,7 +102,16 @@ def get_playlists_of_user_id_path(user_id: int):
                 track_ids = playlist.track_ids
 
                 # TODO: get tracks from sparql service using track_ids and append it to playlist for return
-                # add field "tracks": [ {}, {}, ...] 
+                """add field "tracks": [ {}, 
+                    {
+                        "title": "title",
+                        "artist": "artist",
+                        "album": "album",
+                        "duration": "duration",
+                        "genre": "genre",
+                        "date": "date"
+                    }, ...] 
+                """
 
                 playlists_to_return.append(playlist.to_json())
             else:

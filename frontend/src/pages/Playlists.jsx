@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import Spinner from "../components/Spinner";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-
+import { getUserId } from "../helpers/utils";
 
 
 export default function FriendProfile() {
@@ -50,6 +50,11 @@ export default function FriendProfile() {
             sort: 'asc',
         },
         {
+            label: 'Owner',
+            field: 'owner', 
+            sort: 'asc',
+        },
+        {
             label: 'View Playlist',
             field: 'view', // New column for buttons
             sort: 'disabled',
@@ -65,6 +70,7 @@ export default function FriendProfile() {
             playlist_name: playlist.playlist_name,
             description: playlist.playlist_description,
             no_tracks: no_tracks,
+            owner: playlist.user_id == getUserId() ? "Me" : playlist.user_name,
             view: (
                 <button className="btn btn-primary" onClick={() => handleViewPlaylist(playlist.playlist_id)}>
                     View Playlist
