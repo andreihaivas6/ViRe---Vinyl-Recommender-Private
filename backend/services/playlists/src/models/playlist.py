@@ -29,6 +29,7 @@ class Playlist(db.Model):
     playlist_id = db.Column(db.Integer, primary_key=True, autoincrement=True, index=True)
     user_id = db.Column(db.Integer, nullable=False)
     playlist_name = db.Column(db.String, nullable=False)
+    imported_from_jspf = db.Column(db.Boolean, nullable=False, default=False)
 
     playlist_description = db.Column(db.String, nullable=True)
     user_name = db.Column(db.String, nullable=True)
@@ -38,6 +39,18 @@ class Playlist(db.Model):
     @hybrid_property
     def track_ids(self):
         return [content.track_id for content in self.playlist_content]
+
+    def to_json(self):
+        return {
+            "playlist_id": self.playlist_id,
+            "user_id": self.user_id,
+            "playlist_name": self.playlist_name,
+            "playlist_description": self.playlist_description,
+            "user_name": self.user_name,
+            "imported_from_jspf": self.imported_from_jspf,
+            "track_ids": self.track_ids,
+            # "playlist_content": self.playlist_content
+        }
 
 
 class SharedPlaylist(db.Model):
@@ -55,6 +68,27 @@ class SharedPlaylist(db.Model):
     __table_args__ = (
         db.UniqueConstraint("playlist_id", "shared_with_user_name", name="unique_shared_playlist"),
     )
+
+class TrackForJSPF(db.Model):
+    def local_time():
+        return datetime.utcnow() + timedelta(hours=2)
+
+    __tablename__ = "tracks_for_jspf"
+
+    track_id = db.Column(db.Integer, primary_key=True, index=True, autoincrement=True)
+    playlist_id = db.Column(db.Integer, db.ForeignKey("playlists.playlist_id"), nullable=True)
+    title = db.Column(db.String, nullable=True)
+    artist = db.Column(db.String, nullable=True)
+    album = db.Column(db.String, nullable=True)
+
+    def to_json(self):
+        return {
+            "track_id": self.track_id,
+            "playlist_id": self.playlist_id,
+            "title": self.title,
+            "artist": self.artist,
+            "album": self.album
+        }
 
 class PlaylistContentSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -82,7 +116,6 @@ class PlaylistSchemaWithContent(ma.SQLAlchemyAutoSchema):
         sqla_session = db.session
         # exclude = ("user_id",)
         include_relationships = True 
-
 
 class SharedPlaylistSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
