@@ -1,5 +1,6 @@
 import pathlib
 import os
+from stardog import Connection
 
 from flask import Flask
 
@@ -12,7 +13,14 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'this is my secret'
 app.config['SECRET_KEY'] = SECRET_KEY
 
+connection_details = {
+    'endpoint': 'https://sd-e199938f.stardog.cloud:5820',
+    'username': 'andreeaciocan2000@gmail.com',
+    'password': 'adminadmin123'
+}
 
+conn = Connection('vinyl', endpoint='https://sd-e199938f.stardog.cloud:5820',
+                            username='andreeaciocan2000@gmail.com', password='adminadmin123')
 from routes import *
 app.register_blueprint(app_sparql)
 

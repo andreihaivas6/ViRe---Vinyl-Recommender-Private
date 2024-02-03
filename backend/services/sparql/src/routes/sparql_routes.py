@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import request
-
+from main import conn
 from others import auth_middleware
 
 app_sparql = Blueprint("app_sparql", __name__)
@@ -10,8 +10,10 @@ app_sparql = Blueprint("app_sparql", __name__)
 def query():
     try:
         payload = request.get_json()
+        query = payload["query"]
+        res = conn.select(query)
         return {
-            "result": payload
+            "result": res
         }
     except Exception as e:
         return {

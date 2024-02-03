@@ -2,7 +2,7 @@
 # get songs data
 from flask import Blueprint
 from flask import request
-
+import requests
 from others import auth_middleware, Utils
 
 app_data = Blueprint("app_data", __name__)
@@ -17,48 +17,21 @@ def get_songs():
             return {
                 "msg": "Song name is required"
             }, 400
-        
-        # TODO: get songs from sparql service using song_name
-        
-        return {
-            "tracks": [
-                {
-                    "album": "21",
-                    "artist": "Adele",
-                    "playlist_id": 1,
-                    "title": "Rolling in the Deep",
-                    "track_id": 1
-                },
-                {
-                    "album": "21",
-                    "artist": "Adele",
-                    "playlist_id": 1,
-                    "title": "Someone Like You",
-                    "track_id": 2
-                },
-                {
-                    "album": "Fearless",
-                    "artist": "Taylor Swift",
-                    "playlist_id": 1,
-                    "title": "You Belong with Me",
-                    "track_id": 3
-                },
-                {
-                    "album": "1989",
-                    "artist": "Taylor Swift",
-                    "playlist_id": 1,
-                    "title": "Blank Space",
-                    "track_id": 4
-                },
-                {
-                    "album": "Folklore",
-                    "artist": "Taylor Swift",
-                    "playlist_id": 1,
-                    "title": "Cardigan",
-                    "track_id": 5
-                }
-            ],
-        }
+
+        query =  """
+            SELECT ?songURI ?title ?genre ?duration ?date
+            WHERE {
+            ?songURI a ns1:Song ;
+                        dc:title ?title ;
+                        dc:date ?date ;
+                        ns1:duration ?duration ;
+                        ns1:genre ?genre .
+            FILTER regex(?title,\"""" + song_name +  """\", "i")""" + """
+            }
+        """
+        res = requests.post("http://localhost:5003/query", json={"query": query})
+
+        return res.json()
 
     except Exception as e:
         return {
