@@ -3,6 +3,7 @@
 import '../../assets/styles/login.css'
 import '../../assets/styles/home.css'
 import RightImg from '../../assets/images/bg-1.jpg'
+import { useNavigate } from "react-router-dom";
 
 import { Link } from "react-router-dom"
 import { useEffect, useState } from 'react';
@@ -10,6 +11,7 @@ import { useEffect, useState } from 'react';
 import useFetch from '../../helpers/hooks/useFetch';
 import { URL_LOGIN } from '../../config/config';
 import { swal, icons } from '../../helpers/mySwal';
+import jwt_decode from "jwt-decode";
 
 
 export default function Login() {
@@ -17,6 +19,8 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [errorName, setErrorName] = useState("");
     const [sent, setSent] = useState(false)
+
+    const navigation = useNavigate()
 
     const onChangeUsername = (e) => {
         setUsername(e.target.value);
@@ -27,7 +31,7 @@ export default function Login() {
     
     let {fetch_data, data, status} = useFetch(URL_LOGIN, 'POST', {given_body:{
         'username': username,
-        'password': password
+        'password_hash': password
     }, immediate: false}) 
 
     const handleLogin = () => {
@@ -48,7 +52,18 @@ export default function Login() {
             })
             setUsername('')
             setPassword('')
-            setErrorName('Check your email.')
+
+            localStorage.setItem("user", JSON.stringify(data))
+            navigation('/preferences')
+            swal({
+                title:'Successfully logged in.',
+                icon:icons.success
+            })
+            localStorage.setItem('username', jwt_decode(data.data).username)
+
+
+
+
             setSent(true)
         } 
         else {

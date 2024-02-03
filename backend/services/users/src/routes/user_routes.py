@@ -39,6 +39,7 @@ def create_user():
             }, 400
     
     except Exception as e:
+        print(e)
         return {
             "msg": "Could not create user",
             "error": str(e)
@@ -55,6 +56,7 @@ def login_user():
             else 400
     
     except Exception as e:
+        print(e)
         return {
             "msg": "Could not login user",
             "error": str(e)

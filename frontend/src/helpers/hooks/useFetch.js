@@ -64,30 +64,12 @@ export default function useFetch(url, method_name, {
 async function getAuth(headers, navigation) {
     const user = JSON.parse(localStorage.getItem('user'))
 
-    if (user && user.access) {
-        let decoded = jwt_decode(user.access)
-        let decoded_refresh = jwt_decode(user.refresh)
-
-        if ((Date.now() / 1000) > decoded_refresh.exp) {
-            logout(navigation)
-            return headers
-        }
+    if (user && user.data) {
+        let decoded = jwt_decode(user.data)
         
         if ((Date.now() / 1000) > decoded.exp) {
-            let response = await axios.post(API_URL + URL_REFRESH, {
-                "refresh": user.refresh
-            })
-
-            if (response.status === 200 && response.data.access) {
-                localStorage.setItem("user", JSON.stringify(response.data))
-                headers['Authorization'] = 'Bearer ' + response.data.access
-            }
-            else {
-                logout(navigation)
-            }
-        } else {
-            headers['Authorization'] = 'Bearer ' + user.access
-        }        
+            logout(navigation)
+        }
     }
     return headers
 }

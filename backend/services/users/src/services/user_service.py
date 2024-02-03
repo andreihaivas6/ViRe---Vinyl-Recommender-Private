@@ -52,7 +52,11 @@ class UserService:
         }
 
     def create_user(self, user: User) -> Optional[User]:
-        user.password_hash = generate_password_hash(user.password_hash)
+        try:
+            user.password_hash = generate_password_hash(user.password_hash)
+        except Exception as e:
+            print(e)
+            return None
         return self.user_repo.create_user(user)
 
     def update_user(self, user_id: int, user: User) -> Optional[User]:

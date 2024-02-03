@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
             title:'You are logged in.', 
             icon:icons.info
         })
-        return <Navigate to="/bots" replace />;
+        return <Navigate to="/preferences" replace />;
     }
     return children;
 };
