@@ -11,11 +11,13 @@ class SpotifyAPI:
         try:
             url = "https://api.spotify.com/v1/me/playlists"
             response = requests.get(url, headers=self.headers)
+            print(response.json())
             playlists = response.json().get("items", [])
+            print(playlists)
             return playlists
         except Exception as e:
             print(e)
-            return None
+            return []
 
     def decode_response(self, response):
         try:

@@ -70,6 +70,7 @@ class Utils:
 
         print("Trying to get the playlists tracks...")
         for playlist in user_playlists:
+            print(f"Playlist: {playlist['name']}")
             playlist_id = playlist["id"]
             playlist_tracks = spotify_api.get_playlist_tracks(playlist_id)
             for track in playlist_tracks:
@@ -78,5 +79,7 @@ class Utils:
                 tracks_response['release_date'].append(track[2])
                 print(f"Track: {track[0]}")
 
-        return json.dumps(tracks_response) if response.status_code == 200 else None
+
+        print(tracks_response)
+        return json.dumps(tracks_response) if response.status_code == 200 else {}
        

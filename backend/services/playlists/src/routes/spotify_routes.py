@@ -8,6 +8,7 @@ app_spotify = Blueprint("app_spotify", __name__)
 def get_spotify_user_info(access_token: str):
     try:
         user_info = Utils.get_spotify_user_info(access_token)
+        print(user_info)
         return user_info
     except Exception as e:
         print(e)

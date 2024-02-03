@@ -9,7 +9,7 @@ const code = params.get("code");
 
 export async function UseSentToken(accessToken) {
     const data_conn = { access_token: accessToken }
-    const result = await fetch(API_URL + PLAYLIST_PORT + URL_SPOTIFY + "/" + accessToken, {
+    const result = await fetch(API_URL + PLAYLIST_PORT + URL_SPOTIFY + accessToken, {
         method: 'POST',
         body: JSON.stringify(data_conn),
     })
