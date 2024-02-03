@@ -60,22 +60,3 @@ class Utils:
                         print(f"Artist: {artist_name}")
                 print()
         return tracks
-    
-    @staticmethod
-    def get_spotify_user_info(access_token: str):
-        try:
-            headers = {
-                "Authorization": f"Bearer {access_token.strip()}"
-            }
-            response = requests.get(
-                "https://api.spotify.com/v1/me/playlists", 
-                headers=headers
-            )
-            playlists = response.json()["items"]
-
-            tracks = Utils.get_tracks(playlists, headers)
-            return tracks
-
-        except Exception as e:
-            print(e)
-            return None

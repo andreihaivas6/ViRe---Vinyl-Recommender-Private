@@ -61,11 +61,14 @@ class Utils:
         spotify_api = SpotifyAPI(access_token)
         # Get User Playlists
         user_playlists = spotify_api.get_user_playlists()
+        print("User Playlists Number: ", len(user_playlists))
+
         tracks_response = {}
         tracks_response['track_name'] = []
         tracks_response['artist_name'] = []
         tracks_response['release_date'] = []
 
+        print("Trying to get the playlists tracks...")
         for playlist in user_playlists:
             playlist_id = playlist["id"]
             playlist_tracks = spotify_api.get_playlist_tracks(playlist_id)
@@ -73,33 +76,7 @@ class Utils:
                 tracks_response['track_name'].append(track[0])
                 tracks_response['artist_name'].append(track[1])
                 tracks_response['release_date'].append(track[2])
+                print(f"Track: {track[0]}")
 
         return json.dumps(tracks_response) if response.status_code == 200 else None
        
-
-
-    @staticmethod
-    def get_user_id_from_token():
-        try:
-            token = request.headers.get("Authorization").split(" ")[1]
-            data = jwt.decode(
-                token, 
-                current_app.config["SECRET_KEY"], 
-                algorithms=["HS256"]
-            )
-            return data["id"]
-        except:
-            return None
-    
-    @staticmethod
-    def get_user_name_from_token():
-        try:
-            token = request.headers.get("Authorization").split(" ")[1]
-            data = jwt.decode(
-                token, 
-                current_app.config["SECRET_KEY"], 
-                algorithms=["HS256"]
-            )
-            return data["username"]
-        except:
-            return "no-name"

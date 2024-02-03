@@ -12,7 +12,6 @@ class SpotifyAPI:
             url = "https://api.spotify.com/v1/me/playlists"
             response = requests.get(url, headers=self.headers)
             playlists = response.json().get("items", [])
-            print(len(playlists))
             return playlists
         except Exception as e:
             print(e)
