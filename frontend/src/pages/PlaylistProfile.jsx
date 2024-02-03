@@ -87,7 +87,7 @@ export default function PlaylistProfile() {
             id: parseInt(index) + 1,
             title: playlist.title,
             artist: playlist.artist,
-            album: playlist.album,
+            album: playlist.album || 'No album',
             duration: playlist.duration,
             genre: playlist.genre,
             date: playlist.date,
@@ -112,6 +112,26 @@ export default function PlaylistProfile() {
             sort: 'asc',
         },
         {
+            label: 'Album',
+            field: 'album', // New column for buttons
+            sort: 'asc',
+        },
+        {
+            label: 'Duration',
+            field: 'duration',
+            sort: 'asc',
+        },
+        {
+            label: 'Genre',
+            field: 'genre', // New column for buttons
+            sort: 'asc',
+        },
+        {
+            label: 'Date',
+            field: 'date', // New column for buttons
+            sort: 'asc',
+        },
+        {
             label: 'Add',
             field: 'add', // New column for buttons
             sort: 'disabled',
@@ -129,6 +149,10 @@ export default function PlaylistProfile() {
                 tracks_rows_temp.push({
                     title: track.title,
                     artist: track.artist,
+                    album: track.album || 'No album',
+                    duration: track.duration,
+                    genre: track.genre,
+                    date: track.date,
                     add: (<button className="btn btn-primary" onClick={() => {
                         let headers = {
                             'Accept': 'application/json',
@@ -162,6 +186,7 @@ export default function PlaylistProfile() {
         }
     }, [tracks])
 
+    const [searchInProgress, setSearchInProgress] = useState(false)
 
     return (
         <PositionedPage page={
@@ -169,7 +194,7 @@ export default function PlaylistProfile() {
                <div className="text-center">
                 {/* a flex with 2 components: Share with *dropdown* with usernames from fetch_friends and a button with a request */}
                     {
-                        isPending ? 
+                        isPending ?
                         <Spinner/> : 
                         data.user_id == getUserId() ?
                             <div>
@@ -188,16 +213,24 @@ export default function PlaylistProfile() {
                                         const user = JSON.parse(localStorage.getItem('user'))
                                         headers['Authorization'] = 'Bearer ' + user.data
                                         // get request to http://127.0.0.1:5000/songs?name="ceva"
+                                        setSearchInProgress(true)
                                         fetch(API_URL_PLAYLIST + PLAYLIST_PORT + 'songs?name=' + search, {
                                             method: 'GET',
                                             headers: headers
                                         }).then(response => response.json())
                                         .then(data => {
                                             setTracks(data)
+                                            setSearchInProgress(false)
+                                        })
+                                        .catch(error => {
+                                            console.log(error)
+                                            searchInProgress(false)
                                         })
                                     }}>Search</button>
                                 </div>
-                                {
+                                { 
+                                    searchInProgress ?
+                                    <Spinner/> :
                                     tracks.tracks !== undefined && tracks.tracks.length > 0 ?
                                     <div>
                                         {/* <h3 className="mx-auto my-0  text-dark pt-2">Search results</h3> */}

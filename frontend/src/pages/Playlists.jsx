@@ -26,7 +26,7 @@ export default function FriendProfile() {
             'Content-Type': 'application/json',
         }
         headers['Authorization'] = 'Bearer ' + user.data
-        fetch(`${API_URL_PLAYLIST}${PLAYLIST_PORT}/playlist/${playlist_id}`, {
+        fetch(`${API_URL_PLAYLIST}${PLAYLIST_PORT}playlist/${playlist_id}`, {
             method: 'DELETE',
             headers: headers,
         })

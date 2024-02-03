@@ -19,7 +19,7 @@ def get_songs():
             }, 400
 
         query =  """
-            SELECT ?songURI ?title ?genre ?duration ?date
+            SELECT ?songURI ?title ?genre ?duration ?date 
             WHERE {
             ?songURI a ns1:Song ;
                         dc:title ?title ;
@@ -29,11 +29,30 @@ def get_songs():
             FILTER regex(?title,\"""" + song_name +  """\", "i")""" + """
             }
         """
-        res = requests.post("http://localhost:5003/query", json={"query": query})
+        res = requests.post(
+            "http://localhost:5003/query", 
+            json={"query": query},
+            headers=request.headers
+        ).json()
 
-        return res.json()
+        result = list()
+        for elem in res['result']['results']['bindings']:
+            title = elem["title"]["value"]
+            id = title.replace(' ', '_').lower().replace('"', '').replace('.','').replace('\'', '').replace('<', '').replace('>', '')
+            result.append({
+                "track_id": id,
+                "title": title,
+                "genre": elem["genre"]["value"],
+                "duration": elem["duration"]["value"],
+                "date": elem["date"]["value"],
+            })
+
+        return {
+            "tracks": result
+        }
 
     except Exception as e:
+        print(e)
         return {
             "msg": "Could not get songs"
         }, 400
