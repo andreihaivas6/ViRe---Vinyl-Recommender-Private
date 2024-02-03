@@ -1,4 +1,4 @@
-from models import Playlist, PlaylistContent
+from models import Playlist, PlaylistContent, SharedPlaylist, TrackForJSPF
 from main import db
 
 from typing import List, Optional
@@ -18,6 +18,15 @@ class PlaylistRepository:
         playlists = Playlist.query.filter_by(user_id=user_id).all()
         return playlists
     
+    def get_playlists_shared_with_username(self, username: str) -> List[Playlist]:
+        shared_playlists = SharedPlaylist.query.filter_by(shared_with_user_name=username).all()
+        playlists = [
+            Playlist.query.get(shared_playlist.playlist_id)
+            for shared_playlist in shared_playlists
+        ]
+        return playlists
+
+
     def create_playlist(self, playlist: Playlist) -> Optional[Playlist]:
         try:
             db.session.add(playlist)
@@ -69,6 +78,21 @@ class PlaylistRepository:
             db.session.commit()
 
             return playlist_content
+        except Exception as e:
+            return None
+    
+    def add_track_to_jspf_playlist(self, playlist: Playlist) -> Optional[Playlist]:
+        try:
+            tracks = TrackForJSPF.query.filter_by(playlist_id=playlist.playlist_id).all()
+            tracks = [
+                track.to_json()
+                for track in tracks
+            ]
+
+            playlist_result = playlist.to_json()
+            playlist_result["tracks"] = tracks
+
+            return playlist_result
         except Exception as e:
             return None
     

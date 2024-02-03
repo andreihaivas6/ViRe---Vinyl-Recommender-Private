@@ -1,0 +1,39 @@
+{
+    "playlist": {
+      "title": "Taylor's Best Hits",
+      "creator": "Swiftie",
+      "track": [
+        {
+          "location": ["http://example.com/rolling_in_the_deep.mp3"],
+          "title": "Rolling in the Deep",
+          "creator": "Adele",
+          "album": "21"
+        },
+        {
+          "location": ["http://example.com/someone_like_you.mp3"],
+          "title": "Someone Like You",
+          "creator": "Adele",
+          "album": "21"
+        },
+        {
+          "location": ["http://example.com/you_belong_with_me.mp3"],
+          "title": "You Belong with Me",
+          "creator": "Taylor Swift",
+          "album": "Fearless"
+        },
+        {
+          "location": ["http://example.com/blank_space.mp3"],
+          "title": "Blank Space",
+          "creator": "Taylor Swift",
+          "album": "1989"
+        },
+        {
+          "location": ["http://example.com/cardigan.mp3"],
+          "title": "Cardigan",
+          "creator": "Taylor Swift",
+          "album": "Folklore"
+        }
+      ]
+    }
+  }
+  

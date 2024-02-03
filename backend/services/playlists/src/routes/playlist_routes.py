@@ -19,16 +19,20 @@ playlist_repository = PlaylistRepository()
 def get_playlist_by_id(playlist_id: int):
     try:
         playlist = playlist_repository.get_playlist_by_id(playlist_id)
-
-        track_ids = playlist.track_ids
-        # TODO: get tracks from sparql service using track_ids and append it to playlist for return
-
         if playlist is None:
             return {
                 "msg": "Playlist not found"
             }, 404
+
+        if not playlist.imported_from_jspf:
+            track_ids = playlist.track_ids
+            # TODO: get tracks from sparql service using track_ids and append it to playlist for return
+            # add field "tracks": [ {}, {}, ...] 
+            return playlist.to_json()
         
-        return playlist_schema_with_content.dump(playlist)
+        else:
+            return playlist_repository.add_track_to_jspf_playlist(playlist)
+            
     except Exception as e:
         print(e)
         return {
@@ -43,13 +47,24 @@ def get_playlists_of_user_id():
         user_id = Utils.get_user_id_from_token()
         playlists = playlist_repository.get_playlists_of_user_id(user_id)
 
-        # TODO: Add shared playlists to playlists
+        shared_playlists = playlist_repository.get_playlists_shared_with_username(Utils.get_user_name_from_token())
+        playlists.extend(shared_playlists)
 
+        playlists_to_return = list()
         for playlist in playlists:
-            track_ids = playlist.track_ids
-            # TODO: get tracks from sparql service using track_ids and append it to playlist for return
+            if not playlist.imported_from_jspf:
+                track_ids = playlist.track_ids
 
-        return playlists_schema_with_content.dump(playlists)
+                # TODO: get tracks from sparql service using track_ids and append it to playlist for return
+                # add field "tracks": [ {}, {}, ...] 
+
+                playlists_to_return.append(playlist.to_json())
+            else:
+                playlists_to_return.append(
+                    playlist_repository.add_track_to_jspf_playlist(playlist)
+                )
+
+        return playlists_to_return
     except Exception as e:
         print(e)
         return {
