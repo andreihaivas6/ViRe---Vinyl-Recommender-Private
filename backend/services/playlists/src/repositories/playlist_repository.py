@@ -43,7 +43,7 @@ class PlaylistRepository:
     
     def delete_playlist(self, playlist_id: int) -> Optional[Playlist]:
         try:
-            playlist = Playlist.query.get(playlist_id)
+            playlist = Playlist.query.get(playlist_id) 
             if playlist is None:
                 return None
             

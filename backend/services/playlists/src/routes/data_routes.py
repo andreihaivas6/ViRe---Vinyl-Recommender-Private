@@ -19,7 +19,7 @@ def get_songs():
             }, 400
 
         query =  """
-            SELECT ?songURI ?title ?genre ?duration ?date
+            SELECT ?songURI ?title ?genre ?duration ?date 
             WHERE {
             ?songURI a ns1:Song ;
                         dc:title ?title ;
@@ -29,11 +29,20 @@ def get_songs():
             FILTER regex(?title,\"""" + song_name +  """\", "i")""" + """
             }
         """
-        res = requests.post("http://localhost:5003/query", json={"query": query})
+        res = requests.post(
+            "http://localhost:5003/query", 
+            json={"query": query},
+            headers=request.headers
+        ).json()
 
-        return res.json()
+        result = Utils.get_tracklist(res)
+
+        return {
+            "tracks": result
+        }
 
     except Exception as e:
+        print(e)
         return {
             "msg": "Could not get songs"
         }, 400

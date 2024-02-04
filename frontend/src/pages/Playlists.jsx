@@ -26,7 +26,7 @@ export default function FriendProfile() {
             'Content-Type': 'application/json',
         }
         headers['Authorization'] = 'Bearer ' + user.data
-        fetch(`${API_URL_PLAYLIST}${PLAYLIST_PORT}/playlist/${playlist_id}`, {
+        fetch(`${API_URL_PLAYLIST}${PLAYLIST_PORT}playlist/${playlist_id}`, {
             method: 'DELETE',
             headers: headers,
         })
@@ -91,7 +91,7 @@ export default function FriendProfile() {
     let rows = []
     for (let index in data ){
         let playlist = data[index]
-        let no_tracks = playlist.tracks !== undefined ? playlist.tracks.length : 0
+        let no_tracks = playlist.imported_from_jspf ? playlist.tracks.length : playlist.track_ids !== undefined ? playlist.track_ids.length : 0
         rows.push({
             id: parseInt(index) + 1,
             playlist_name: playlist.playlist_name,

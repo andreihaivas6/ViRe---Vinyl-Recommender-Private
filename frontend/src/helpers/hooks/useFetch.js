@@ -31,7 +31,7 @@ export default function useFetch(service_port, url, method_name, {
         api_url = API_URL_SPARQL
     }
     let complete_url = api_url + service_port + url
-    console.log(complete_url)
+    // console.log(complete_url)
 
     const fetch_data = (async () => {
         let headers = {
