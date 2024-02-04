@@ -5,11 +5,7 @@ from flask import request
 import jwt
 import json
 
-class Utils:
-    @staticmethod
-    def get_token():
-        return request.headers.get("Authorization").split(" ")[1]
-    from flask import current_app
+
 from flask import request
 import requests
 import jwt
@@ -60,30 +56,39 @@ class Utils:
         )
 
         spotify_api = SpotifyAPI(access_token)
-        # Get User Playlists
         user_playlists = spotify_api.get_user_playlists()
-        print("User Playlists Number: ", len(user_playlists))
+        # print("User Playlists Number: ", len(user_playlists))
 
-        tracks_response = {}
-        tracks_response['track_name'] = []
-        tracks_response['artist_name'] = []
-        tracks_response['release_date'] = []
+        # tracks_response = {}
+        # tracks_response['track_name'] = []
+        # tracks_response['artist_name'] = []
+        # tracks_response['release_date'] = []
 
-        print("Trying to get the playlists tracks...")
+        # print("Trying to get the playlists tracks...")
+        # for playlist in user_playlists:
+        #     print(f"Playlist: {playlist['name']}")
+        #     playlist_id = playlist["id"]
+        #     playlist_tracks = spotify_api.get_playlist_tracks(playlist_id)
+        #     for track in playlist_tracks:
+        #         tracks_response['track_name'].append(track[0])
+        #         tracks_response['artist_name'].append(track[1])
+        #         tracks_response['release_date'].append(track[2])
+        #         print(f"Track: {track[0]}")
+
+        tracks_response = list()
         for playlist in user_playlists:
-            print(f"Playlist: {playlist['name']}")
             playlist_id = playlist["id"]
+
             playlist_tracks = spotify_api.get_playlist_tracks(playlist_id)
             for track in playlist_tracks:
-                tracks_response['track_name'].append(track[0])
-                tracks_response['artist_name'].append(track[1])
-                tracks_response['release_date'].append(track[2])
-                print(f"Track: {track[0]}")
+                tracks_response.append({
+                    "title": track[0],
+                    "artist": track[1],
+                    "date": str(track[2]).split("-")[0]
+                })
 
-
-        print(tracks_response)
-        return json.dumps(tracks_response) if response.status_code == 200 else {}
-       
+        return tracks_response if response.status_code == 200 else {}
+        
     @staticmethod
     def build_song_ids(ids):
         return ' '.join([f'<http://purl.org/ontology/mo/#song-{id}>' for id in ids])

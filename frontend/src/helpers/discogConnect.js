@@ -1,10 +1,13 @@
 export async function discogSendVerifier(verifier) {
     try {
         console.log({"verifier": verifier});
+        const user = JSON.parse(localStorage.getItem('user'))
         let headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         }
+        headers['Authorization'] = 'Bearer ' + user.data
+
         const result = await fetch("http://127.0.0.1:5001/discog/verifier", {
             method: "POST",
             headers: headers,

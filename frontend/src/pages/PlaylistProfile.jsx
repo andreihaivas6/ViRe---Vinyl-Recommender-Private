@@ -161,8 +161,8 @@ export default function PlaylistProfile() {
                     artist: track.artist,
                     album: track.album || 'No album',
                     duration: track.duration,
-                    genre: track.genre,
-                    date: track.date,
+                    genre: track.genre || 'N/A',
+                    date: track.date !== '0' ? track.date : 'N/A',
                     add: (<button className="btn btn-primary" onClick={() => {
                         let headers = {
                             'Accept': 'application/json',

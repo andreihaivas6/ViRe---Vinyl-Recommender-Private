@@ -8,10 +8,18 @@ const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
 export async function UseSentToken(accessToken) {
+    const user = JSON.parse(localStorage.getItem('user'))
+    let headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+    }
+    headers['Authorization'] = 'Bearer ' + user.data
+
     const data_conn = { access_token: accessToken }
     const result = await fetch(API_URL_PLAYLIST + PLAYLIST_PORT + URL_SPOTIFY + accessToken, {
         method: 'POST',
         bodyF: JSON.stringify(data_conn),
+        headers: headers,
     })
     // setStatus(result.status)
     const data_json = await result.json()
