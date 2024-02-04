@@ -38,7 +38,8 @@ class PreferencesRepository:
             if "genre" in track:
                 preferences["genres"][track["genre"]] += 1
             if "date" in track:
-                preferences["years"][track["date"]] += 1
+                date = int(int(track["date"]) / 10) * 10
+                preferences["years"][date] += 1
         
         self.publish_preferences(preferences)
     

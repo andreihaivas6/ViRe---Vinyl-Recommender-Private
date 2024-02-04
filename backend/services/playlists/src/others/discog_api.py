@@ -13,10 +13,10 @@ def get_token():
     try:
         val = d.get_authorize_url('http://localhost:3000/profile')
         if len(val) == 3:
-            print(val[2])
             return {
                 "msg": "Discog token",
-                "token": val[2]}
+                "token": val[2]
+                }
         else:
             return {
                 "msg": "Could not get discog token"
