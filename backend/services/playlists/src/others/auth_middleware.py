@@ -24,7 +24,7 @@ def auth_middleware(f):
                 current_app.config["SECRET_KEY"], 
                 algorithms=["HS256"]
             )
-            print(data)
+            # print(data)
         except jwt.ExpiredSignatureError:
             return {
                 "msg": "Token is expired",

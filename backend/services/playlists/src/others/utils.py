@@ -89,9 +89,12 @@ class Utils:
         return ' '.join([f'<http://purl.org/ontology/mo/#song-{id}>' for id in ids])
     
     @staticmethod
-    def get_tracklist(res: dict):
+    def get_tracklist(res: dict, track_dates: list = [], trackd_ids: list = []):
+        dates_dict = {
+            track_id: date 
+            for track_id, date in zip(trackd_ids, track_dates)
+        }
         result = list()
-        print(res)  
         try:
             for elem in res['result']['results']['bindings']:
                 title = elem["title"]["value"]
@@ -100,6 +103,9 @@ class Utils:
                 id = f"{title}-{artist}"
                 id = id.replace(' ', '_').lower().replace('"', '').replace('.','').replace('\'', '').replace('<', '').replace('>', '')
                 
+                timestamp = dates_dict.get(id, "")
+                timestamp = timestamp.strftime("%d/%m/%Y %H:%M") if timestamp else ""
+
                 try:
                     genre = elem["genre"]["value"].replace("'", '"')
                     genre = json.loads(genre)
@@ -114,7 +120,8 @@ class Utils:
                     "genre": genre,
                     "duration": elem["duration"]["value"] if "duration" in elem else "",
                     "date": elem["date"]["value"] if "date" in elem else "",
-                    "album": elem["album"]["value"] if "album" in elem else ""
+                    "album": elem["album"]["value"] if "album" in elem else "",
+                    "timestamp": timestamp
                 })
             return result
         except Exception as e:

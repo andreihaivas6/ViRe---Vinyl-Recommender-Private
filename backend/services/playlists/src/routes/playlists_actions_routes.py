@@ -7,11 +7,12 @@ from flask import request
 
 from others import auth_middleware, Utils
 from models import *
-from repositories import PlaylistActionsRepository
+from repositories import PlaylistActionsRepository, PreferencesRepository
 
 app_playlist_actions = Blueprint("app_playlist_actions", __name__)
 
 playlist_actions_repository = PlaylistActionsRepository()
+preferences_repository = PreferencesRepository()
 
 # share a playlist with a given user_id (playlist must be owned by the current user)
 @app_playlist_actions.route("/playlist/share", methods=["POST"])
@@ -67,6 +68,13 @@ def import_playlist():
     try:
         playlist = request.json["playlist"]
         result = playlist_actions_repository.import_playlist(playlist)
+
+        for track in playlist["track"]:
+            track['artist'] = track['creator']
+        preferences_repository.compute_preferences(
+            playlist["track"], 
+            Utils.get_user_id_from_token()
+        )
 
         if result is None:
             return {

@@ -74,8 +74,13 @@ export default function PlaylistProfile() {
             sort: 'asc',
         },
         {
-            label: 'Date',
+            label: 'Launch year',
             field: 'date', // New column for buttons
+            sort: 'asc',
+        },
+        {
+            label: 'Date added',
+            field: 'timestamp', // New column for buttons
             sort: 'asc',
         }
     ];
@@ -83,6 +88,7 @@ export default function PlaylistProfile() {
     let rows = []
     for (let index in data.tracks ){
         let playlist = data.tracks[index]
+        console.log(playlist.timestamp)
         rows.push({
             id: parseInt(index) + 1,
             title: playlist.title,
@@ -91,6 +97,7 @@ export default function PlaylistProfile() {
             duration: playlist.duration,
             genre: playlist.genre,
             date: playlist.date,
+            timestamp: playlist.timestamp
         })
     }
 
@@ -127,7 +134,7 @@ export default function PlaylistProfile() {
             sort: 'asc',
         },
         {
-            label: 'Date',
+            label: 'Launch year',
             field: 'date', // New column for buttons
             sort: 'asc',
         },
@@ -146,6 +153,9 @@ export default function PlaylistProfile() {
         if (tracks.tracks !== undefined && tracks.tracks.length > 0) {
             for (let index in tracks.tracks) {
                 let track = tracks.tracks[index]
+                if (track.title.includes('/') || track.artist.includes('/')) {
+                    continue
+                }
                 tracks_rows_temp.push({
                     title: track.title,
                     artist: track.artist,
@@ -164,8 +174,12 @@ export default function PlaylistProfile() {
                             method: 'POST',
                             headers: headers,
                             body: JSON.stringify({
-                                "playlist_id": playlist_id,
-                                "song_id": track.id
+                                "title": track.title,
+                                "artist": track.artist,
+                                "album": track.album,
+                                "duration": track.duration,
+                                "genre": track.genre,
+                                "date": track.date
                             })
                         }).then(response => {
                             if (response.status === 201) {
