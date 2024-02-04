@@ -30,15 +30,16 @@ def get_playlist_by_id(playlist_id: int):
             track_ids = playlist.track_ids
             ids_build = Utils.build_song_ids(track_ids)
             query = """
-                SELECT ?songURI ?title ?genre ?duration ?date
+                SELECT ?songURI ?title ?genre ?duration ?date ?album ?artist
                     WHERE {
                     VALUES ?songURI {""" + ids_build + """}
 
                     ?songURI a ns1:Song ;
                                 dc:title ?title ;
                                 dc:date ?date ;
-                                ns1:duration ?duration ;
-                                ns1:genre ?genre .
+                                ns1:genre ?genre ;
+                                ns1:album ?album ;
+                                ns1:artist ?artist .
                     }
                 """
             

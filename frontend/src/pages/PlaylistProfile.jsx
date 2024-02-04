@@ -74,7 +74,7 @@ export default function PlaylistProfile() {
             sort: 'asc',
         },
         {
-            label: 'Data',
+            label: 'Date',
             field: 'date', // New column for buttons
             sort: 'asc',
         }
