@@ -28,7 +28,7 @@ def add_preference():
 def recommend():
     try:
         user_id = Utils.get_user_id_from_token()
-        # preferences = get_all_preferences_by_user_id(user_id)
+        # preferences = Utils.get_preferences_for_user(user_id)
         preferences = {
         "user_id": 1,
         "preferences": {
@@ -115,7 +115,6 @@ def recommend():
         } 
         result_per_periods = get_recommendation_for_user(preferences)
         print(result_per_periods)
-        
         
         # TODO: Get preferences from nosql database / cache by user_id
         # TODO: Use preferences to call -> Sparql service -> which queries Stardog (from DBpedia) -> returns recommendations

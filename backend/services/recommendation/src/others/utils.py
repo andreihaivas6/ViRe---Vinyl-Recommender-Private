@@ -3,6 +3,8 @@ from flask import request
 
 import jwt
 
+from pymongo import MongoClient
+
 class Utils:
     @staticmethod
     def get_token():
@@ -20,3 +22,14 @@ class Utils:
             return data["id"]
         except:
             return None
+    
+    @staticmethod
+    def get_preferences_for_user(user_id):
+        uri = "mongodb+srv://myAtlasDBUser:myAtlasDBUser@myatlasclusteredu.deaxbzf.mongodb.net/?retryWrites=true&w=majority"
+        local_uri = "mongodb://localhost:27017/"
+        client = MongoClient(local_uri)
+
+        db = client['mydatabase']
+        collection = db['preferences_test-5']
+
+        return collection.find_one({"user_id": user_id})
