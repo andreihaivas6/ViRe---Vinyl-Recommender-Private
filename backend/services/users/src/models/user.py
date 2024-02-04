@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from main import db, ma
+from app import db, ma
 
 import uuid
 

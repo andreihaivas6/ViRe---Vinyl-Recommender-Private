@@ -1,4 +1,4 @@
-from main import db, ma
+from app import db, ma
 
 
 class Friendship(db.Model):
