@@ -30,10 +30,12 @@ def queries():
         result = []
         for query in queries:
             for mini_query in query:
-                print("mini_query: ", mini_query)
-                result.append(conn_vinyl.select(mini_query))
-            # result.append(conn.select(query))
-        print("byee")
+                try:
+                    print("mini_query: ", mini_query)
+                    result.append(conn_vinyl.select(mini_query))
+                except Exception as e:
+                    continue
+
         return {
             "result": result
         }

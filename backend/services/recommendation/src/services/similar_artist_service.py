@@ -63,10 +63,10 @@ def get_similar_artists_by_name(artist_name):
         if artist_id:
             similar_artists = get_similar_artists(artist_id, access_token)
             for artist in similar_artists:
-                if k > 3:
+                if k > 30:
                     break
-                if isinstance(artist, dict):
-                    if 'name' in artist.keys(): 
+                if isinstance(artist, dict) :
+                    if 'name' in artist.keys() and '\'' not in artist['name']: 
                         similar_artists_list.append(artist['name'])
                         k = k + 1
   

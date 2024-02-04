@@ -70,6 +70,7 @@ def clean_preferences(preferences):
         if isinstance(preferences[info], dict):
             info_temp = {key: value for key, value in preferences[info].items() if value is not None and (not isinstance(value, set) or len(value) > 0)}
             preferences[info] = info_temp
+    print(preferences)
     return preferences
 
 def get_input_from_text(text):
