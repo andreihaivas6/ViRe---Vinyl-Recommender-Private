@@ -249,6 +249,7 @@ export default function PlaylistProfile() {
                                     <div>
                                         {/* <h3 className="mx-auto my-0  text-dark pt-2">Search results</h3> */}
                                         <hr></hr>
+                                        <h3 className="mx-auto my-0  text-dark pt-2">Search results</h3>
                                         <MDBDataTable
                                             striped
                                             bordered
@@ -267,6 +268,7 @@ export default function PlaylistProfile() {
                                 }
                                 
                                 <hr></hr>
+                                    <h3 className="mx-auto my-0  text-dark pt-2">Playlist content</h3>
                                     <MDBDataTable
                                         striped
                                         bordered
@@ -320,6 +322,7 @@ export default function PlaylistProfile() {
                                 <h2 className="mx-auto my-0  text-dark pt-5">{data.playlist_name}</h2>
                                 <h4>{data.playlist_description}</h4>
                                 <hr></hr>
+                                <h3 className="mx-auto my-0  text-dark pt-2">Playlist content</h3>
                                 <MDBDataTable
                                     striped
                                     bordered
