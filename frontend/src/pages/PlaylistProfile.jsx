@@ -63,11 +63,11 @@ export default function PlaylistProfile() {
             field: 'album', // New column for buttons
             sort: 'asc',
         },
-        {
-            label: 'Duration',
-            field: 'duration', 
-            sort: 'asc',
-        },
+        // {
+        //     label: 'Duration',
+        //     field: 'duration', 
+        //     sort: 'asc',
+        // },
         {
             label: 'Genre',
             field: 'genre', // New column for buttons
@@ -116,11 +116,11 @@ export default function PlaylistProfile() {
             field: 'album', // New column for buttons
             sort: 'asc',
         },
-        {
-            label: 'Duration',
-            field: 'duration',
-            sort: 'asc',
-        },
+        // {
+        //     label: 'Duration',
+        //     field: 'duration',
+        //     sort: 'asc',
+        // },
         {
             label: 'Genre',
             field: 'genre', // New column for buttons
@@ -202,7 +202,7 @@ export default function PlaylistProfile() {
                                 <h4>{data.playlist_description}</h4>
                                 <hr></hr>
                                 <div className="d-flex justify-content-between">
-                                    <input type="text" className="form-control" id="search" placeholder="Search for a song" style={{marginTop:9}}></input>
+                                    <input type="text" className="form-control" id="search" placeholder="Search for a song or artist" style={{marginTop:9}}></input>
                                     <button className="btn btn-primary" onClick={() => {
                                         let search = document.getElementById('search').value
                                         

@@ -19,8 +19,16 @@ connection_details = {
     'password': 'adminadmin123'
 }
 
-conn = Connection('vinyl', endpoint='https://sd-e199938f.stardog.cloud:5820',
+conn = Connection('songs', endpoint='https://sd-e199938f.stardog.cloud:5820',
                             username='andreeaciocan2000@gmail.com', password='adminadmin123')
+
+import pickle
+
+file_path = 'conn.pkl'
+# Serialize the object to disk
+with open(file_path, 'wb') as fp:
+    pickle.dump(conn, fp)
+
 from routes import *
 app.register_blueprint(app_sparql)
 

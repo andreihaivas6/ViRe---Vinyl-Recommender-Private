@@ -18,15 +18,27 @@ def get_songs():
                 "msg": "Song name is required"
             }, 400
 
-        query =  """
-            SELECT ?songURI ?title ?genre ?duration ?date 
+        query = """
+            SELECT ?songURI ?title ?genre ?duration ?date ?album ?artist
             WHERE {
             ?songURI a ns1:Song ;
                         dc:title ?title ;
+                        ns1:artist ?artist ;
+                        ns1:album ?album ;
                         dc:date ?date ;
-                        ns1:duration ?duration ;
                         ns1:genre ?genre .
-            FILTER regex(?title,\"""" + song_name +  """\", "i")""" + """
+            OPTIONAL {
+                ?songURI ns1:duration ?duration ;
+                        ns1:genre ?genre ;
+                        dc:date ?date ;
+                        ns1:album ?album .
+                }
+            FILTER (
+                regex(?title,\"""" + song_name +  """\", "i") || 
+                regex(?artist,\"""" + song_name +  """\", "i") 
+                )
+
+            """ + """
             }
         """
         res = requests.post(

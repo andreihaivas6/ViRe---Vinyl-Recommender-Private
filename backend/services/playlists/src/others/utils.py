@@ -3,6 +3,7 @@ from flask import current_app
 from flask import request
 
 import jwt
+import json
 
 class Utils:
     @staticmethod
@@ -90,14 +91,32 @@ class Utils:
     @staticmethod
     def get_tracklist(res: dict):
         result = list()
-        for elem in res['result']['results']['bindings']:
-            title = elem["title"]["value"]
-            id = title.replace(' ', '_').lower().replace('"', '').replace('.','').replace('\'', '').replace('<', '').replace('>', '')
-            result.append({
-                "track_id": id,
-                "title": title,
-                "genre": elem["genre"]["value"],
-                "duration": elem["duration"]["value"],
-                "date": elem["date"]["value"],
-            })
-        return result
+        print(res)  
+        try:
+            for elem in res['result']['results']['bindings']:
+                title = elem["title"]["value"]
+                artist = elem["artist"]["value"]
+
+                id = f"{title}-{artist}"
+                id = id.replace(' ', '_').lower().replace('"', '').replace('.','').replace('\'', '').replace('<', '').replace('>', '')
+                
+                try:
+                    genre = elem["genre"]["value"].replace("'", '"')
+                    genre = json.loads(genre)
+                    genre = ', '.join(genre)
+                except:
+                    genre = elem["genre"]["value"]
+                
+                result.append({
+                    "track_id": id,
+                    "title": title,
+                    "artist": artist,
+                    "genre": genre,
+                    "duration": elem["duration"]["value"] if "duration" in elem else "",
+                    "date": elem["date"]["value"] if "date" in elem else "",
+                    "album": elem["album"]["value"] if "album" in elem else ""
+                })
+            return result
+        except Exception as e:
+            print(e)
+            return result
