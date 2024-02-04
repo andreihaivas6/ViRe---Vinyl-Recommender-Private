@@ -5,11 +5,7 @@ from flask import request
 import jwt
 import json
 
-class Utils:
-    @staticmethod
-    def get_token():
-        return request.headers.get("Authorization").split(" ")[1]
-    from flask import current_app
+
 from flask import request
 import requests
 import jwt
@@ -60,38 +56,50 @@ class Utils:
         )
 
         spotify_api = SpotifyAPI(access_token)
-        # Get User Playlists
         user_playlists = spotify_api.get_user_playlists()
-        print("User Playlists Number: ", len(user_playlists))
+        # print("User Playlists Number: ", len(user_playlists))
 
-        tracks_response = {}
-        tracks_response['track_name'] = []
-        tracks_response['artist_name'] = []
-        tracks_response['release_date'] = []
+        # tracks_response = {}
+        # tracks_response['track_name'] = []
+        # tracks_response['artist_name'] = []
+        # tracks_response['release_date'] = []
 
-        print("Trying to get the playlists tracks...")
+        # print("Trying to get the playlists tracks...")
+        # for playlist in user_playlists:
+        #     print(f"Playlist: {playlist['name']}")
+        #     playlist_id = playlist["id"]
+        #     playlist_tracks = spotify_api.get_playlist_tracks(playlist_id)
+        #     for track in playlist_tracks:
+        #         tracks_response['track_name'].append(track[0])
+        #         tracks_response['artist_name'].append(track[1])
+        #         tracks_response['release_date'].append(track[2])
+        #         print(f"Track: {track[0]}")
+
+        tracks_response = list()
         for playlist in user_playlists:
-            print(f"Playlist: {playlist['name']}")
             playlist_id = playlist["id"]
+
             playlist_tracks = spotify_api.get_playlist_tracks(playlist_id)
             for track in playlist_tracks:
-                tracks_response['track_name'].append(track[0])
-                tracks_response['artist_name'].append(track[1])
-                tracks_response['release_date'].append(track[2])
-                print(f"Track: {track[0]}")
+                tracks_response.append({
+                    "title": track[0],
+                    "artist": track[1],
+                    "date": str(track[2]).split("-")[0]
+                })
 
-
-        print(tracks_response)
-        return json.dumps(tracks_response) if response.status_code == 200 else {}
-       
+        return tracks_response if response.status_code == 200 else {}
+        
     @staticmethod
     def build_song_ids(ids):
         return ' '.join([f'<http://purl.org/ontology/mo/#song-{id}>' for id in ids])
     
     @staticmethod
-    def get_tracklist(res: dict):
+    def get_tracklist(res: dict, track_dates: list = [], trackd_ids: list = []):
+        dates_dict = {
+            track_id: date 
+            for track_id, date in zip(trackd_ids, track_dates)
+        }
         result = list()
-        print(res)  
         try:
             for elem in res['result']['results']['bindings']:
                 title = elem["title"]["value"]
@@ -100,6 +108,9 @@ class Utils:
                 id = f"{title}-{artist}"
                 id = id.replace(' ', '_').lower().replace('"', '').replace('.','').replace('\'', '').replace('<', '').replace('>', '')
                 
+                timestamp = dates_dict.get(id, "")
+                timestamp = timestamp.strftime("%d/%m/%Y %H:%M") if timestamp else ""
+
                 try:
                     genre = elem["genre"]["value"].replace("'", '"')
                     genre = json.loads(genre)
@@ -114,7 +125,8 @@ class Utils:
                     "genre": genre,
                     "duration": elem["duration"]["value"] if "duration" in elem else "",
                     "date": elem["date"]["value"] if "date" in elem else "",
-                    "album": elem["album"]["value"] if "album" in elem else ""
+                    "album": elem["album"]["value"] if "album" in elem else "",
+                    "timestamp": timestamp
                 })
             return result
         except Exception as e:

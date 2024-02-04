@@ -15,6 +15,11 @@ class PlaylistContent(db.Model):
     track_id = db.Column(db.String, nullable=False)
 
     playlists = db.relationship("Playlist", back_populates="playlist_content", foreign_keys=[playlist_id])
+    timestamp = db.Column(
+        db.DateTime, 
+        default=local_time, 
+        onupdate=local_time
+    )
 
     __table_args__ = (
         db.UniqueConstraint("playlist_id", "track_id", name="unique_playlist_content"),
@@ -39,6 +44,10 @@ class Playlist(db.Model):
     @hybrid_property
     def track_ids(self):
         return [content.track_id for content in self.playlist_content]
+    
+    @hybrid_property
+    def track_dates(self):
+        return [content.timestamp for content in self.playlist_content]
 
     def to_json(self):
         return {
@@ -49,6 +58,7 @@ class Playlist(db.Model):
             "user_name": self.user_name,
             "imported_from_jspf": self.imported_from_jspf,
             "track_ids": self.track_ids,
+            "track_dates": self.track_dates
             # "playlist_content": self.playlist_content
         }
 

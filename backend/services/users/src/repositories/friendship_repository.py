@@ -1,5 +1,5 @@
 from models import Friendship, User
-from main import db
+from app import db
 
 from typing import List, Optional
 

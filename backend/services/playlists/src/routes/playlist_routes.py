@@ -8,12 +8,13 @@ from typing import List, Dict
 import requests
 
 from others import auth_middleware, Utils
-from repositories import PlaylistRepository
+from repositories import PlaylistRepository, PreferencesRepository
 from models import *
 
 app_playlist = Blueprint("app_playlist", __name__)
 
 playlist_repository = PlaylistRepository()
+preferences_repository = PreferencesRepository()
 
 # get playlist by id
 @app_playlist.route("/playlist/<int:playlist_id>", methods=["GET"])
@@ -44,7 +45,7 @@ def get_playlist_by_id(playlist_id: int):
                 """
             
             res = requests.post("http://localhost:5003/query", json={"query": query}, headers=request.headers).json()
-            tracklist = Utils.get_tracklist(res)
+            tracklist = Utils.get_tracklist(res, playlist.track_dates, track_ids)
             
             playlist = playlist.to_json()
             playlist["tracks"] = tracklist
@@ -199,6 +200,24 @@ def delete_playlist(playlist_id: int):
 def add_track_to_playlist(playlist_id: int, track_id: str):
     try:
         playlist_content = playlist_repository.add_track_to_playlist(playlist_id, track_id)
+
+        print(request.json)
+
+        artist = request.json["artist"] if "artist" in request.json else ""
+        date = request.json["date"] if "date" in request.json else ""
+        genre = request.json["genre"] if "genre" in request.json else ""
+
+        track = {
+            "artist": artist,
+            "genre": genre,
+            "date": date,
+        }
+
+        preferences_repository.compute_preferences(
+            [track], 
+            Utils.get_user_id_from_token()
+        )
+
         if playlist_content is None:
             return {
                 "msg": "Could not add track to playlist"
