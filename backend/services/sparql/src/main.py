@@ -22,6 +22,10 @@ connection_details = {
 conn = Connection('songs', endpoint='https://sd-e199938f.stardog.cloud:5820',
                             username='andreeaciocan2000@gmail.com', password='adminadmin123')
 
+conn_vinyl = Connection('vinyl', endpoint='https://sd-e199938f.stardog.cloud:5820',
+                            username='andreeaciocan2000@gmail.com', password='adminadmin123')
+
+
 from routes import *
 app.register_blueprint(app_sparql)
 

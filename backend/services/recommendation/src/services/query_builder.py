@@ -14,7 +14,7 @@ SELECT DISTINCT ?vinyl ?title ?artist ?genre
         ns1:track ?track ;
         foaf:name ?artist .
         """
-    query += f"FILTER (UCASE(?artist) = UCASE('{artist_name}'))\n"
+    query += f"FILTER (CONTAINS(UCASE(?artist), UCASE('{artist_name}')))"
     query += "} LIMIT 10"
 
     return query
@@ -25,7 +25,7 @@ def get_similar_artists_query(artist_name):
         similar_artists = get_similar_artists_by_name(artist)
         
         for similar_artist in similar_artists:
-            queries += build_query_artists(similar_artist)
+            queries.append(build_query_artists(similar_artist))
     return queries
 
 def sparql_query_builder_for_preferences(preferences):
@@ -58,7 +58,7 @@ SELECT DISTINCT ?vinyl ?title ?artist ?genre
         ok_filter = False
         if sentiment in ['like', 'love']:
             if not ok:
-                query_base += "\nFILTER (\n"
+                query_base += "FILTER ("
                 ok = True
 
             for entity in preferences[sentiment]:
@@ -70,9 +70,9 @@ SELECT DISTINCT ?vinyl ?title ?artist ?genre
                         artists_name += list(preferences[sentiment][entity])
                         if ok_filter:
                             query_base += "&& "
-                            query_base += "UCASE(?artist) IN ('" + "',UCASE( '".join(preferences[sentiment][entity]) + "'))'\n"
+                            query_base += "CONTAINS(UCASE(?artist), '" + "',UCASE( '".join(preferences[sentiment][entity]) + "'))' "
                         else:
-                            query_base += "UCASE(?artist) IN (UCASE('" + "'),UCASE('".join(preferences[sentiment][entity]) + "'))\n"
+                            query_base += "CONTAINS(UCASE(?artist), UCASE('" + "'),UCASE('".join(preferences[sentiment][entity]) + "')) "
                             ok_filter = True
                 
                     elif entity == 'genre':
@@ -80,36 +80,36 @@ SELECT DISTINCT ?vinyl ?title ?artist ?genre
                             query_base += "&& ("
                             for genre in preferences[sentiment][entity]:
                                 query_base += f"REGEX(?genre,\"{genre}\",\"i\") || " 
-                            query_base = query_base[:-3] + ")\n"
+                            query_base = query_base[:-3] + ") "
                         else:
                             query_base += "("
 
                             for genre in preferences[sentiment][entity]:
                                 query_base += f"REGEX(?genre,\"{genre}\",\"i\") || " 
-                            query_base = query_base[:-3] + ")\n"
+                            query_base = query_base[:-3] + ") "
                             ok_filter = True
                   
                 elif entity in ['before', 'after']:
                     if not ok_date:
                         if entity == 'before':
-                            date_query += f"(?date < {preferences[sentiment][entity]})\n"
+                            date_query += f"(?date < {preferences[sentiment][entity]}) "
                         elif entity == 'after':
-                            date_query += f"(?date > {preferences[sentiment][entity]})\n"
+                            date_query += f"(?date > {preferences[sentiment][entity]}) "
                         ok_date = True
                     else:
                         if entity == 'before':
-                            date_query += f"&& (?date < {preferences[sentiment][entity]})\n"
+                            date_query += f"&& (?date < {preferences[sentiment][entity]}) "
                         elif entity == 'after':
-                            date_query += f"&& (?date > {preferences[sentiment][entity]})\n"
+                            date_query += f"&& (?date > {preferences[sentiment][entity]}) "
         else:
              for entity in preferences[sentiment]:
                 if entity in ['artist', 'genre']:
                     if entity == 'artist':
                         if ok_exclude:
                             exclude_query += "&& "
-                            exclude_query += "UCASE(?artist) NOT IN ('" + "',UCASE( '".join(preferences[sentiment][entity]) + "'))'\n"
+                            exclude_query += "UCASE(?artist) NOT IN ('" + "',UCASE( '".join(preferences[sentiment][entity]) + "'))' "
                         else:
-                            exclude_query += "UCASE(?artist) NOT IN (UCASE('" + "'),UCASE('".join(preferences[sentiment][entity]) + "'))\n"
+                            exclude_query += "UCASE(?artist) NOT IN (UCASE('" + "'),UCASE('".join(preferences[sentiment][entity]) + "')) "
                             ok_exclude = True
                 
                     elif entity == 'genre':
@@ -117,47 +117,47 @@ SELECT DISTINCT ?vinyl ?title ?artist ?genre
                             exclude_query += "&& ("
                             for genre in preferences[sentiment][entity]:
                                 exclude_query += f"(!REGEX(?genre,\"{genre}\",\"i\")) || " 
-                            exclude_query = exclude_query[:-3] + ")\n"
+                            exclude_query = exclude_query[:-3] + ") "
                         else:
                             exclude_query += "("
                             for genre in preferences[sentiment][entity]:
                                 exclude_query += f"(!REGEX(?genre,\"{genre}\",\"i\")) || " 
 
-                            exclude_query = exclude_query[:-3] + ")\n"
+                            exclude_query = exclude_query[:-3] + ") "
 
                             ok_exclude = True
                 elif entity in ['before', 'after']:
                     if not ok_date_exclude:
                         if entity == 'before':
-                            date_query_exclude += f"(?date > {preferences[sentiment][entity]})\n"
+                            date_query_exclude += f"(?date > {preferences[sentiment][entity]}) "
                         elif entity == 'after':
-                            date_query_exclude += f"(?date < {preferences[sentiment][entity]})\n"
+                            date_query_exclude += f"(?date < {preferences[sentiment][entity]}) "
                         ok_date_exclude = True
                     else:
                         if entity == 'before':
-                            date_query_exclude += f"&& (?date > {preferences[sentiment][entity]})\n"
+                            date_query_exclude += f"&& (?date > {preferences[sentiment][entity]}) "
                         elif entity == 'after':
-                            date_query_exclude += f"&& (?date < {preferences[sentiment][entity]})\n"
+                            date_query_exclude += f"&& (?date < {preferences[sentiment][entity]}) "
 
     if date_query_exclude!="":
-        exclude_query ="(" + exclude_query + " || " + date_query_exclude + ")\n" 
+        exclude_query ="(" + exclude_query + " || " + date_query_exclude + ") " 
 
     if date_query!="":
-        query_base += "&& " + date_query + "\n"
+        query_base += "&& " + date_query + " "
         if exclude_query!="":
-            query_base += "&& " + exclude_query + ")}\n"
+            query_base += "&& " + exclude_query + ")} "
         else:
-            query_base += ")}\n"
+            query_base += ")} "
     else:
         if exclude_query!="":
-            query_base += "&& " + exclude_query + ")}\n"
+            query_base += "&& " + exclude_query + ")}"
         else:
-            query_base += "}\n"
+            query_base += ")}"
+   
+    final_queries = []
+    final_queries.append(query_base)
     if loves_artist:
-        get_similar_artists_query(artists_name)
+        love_artist_query = get_similar_artists_query(artists_name)
+        final_queries.extend(love_artist_query)
 
-    return query_base
-                # build query
-                # call sparql service
-                # get recommendations
-                
+    return final_queries

@@ -1,6 +1,7 @@
 import spacy
 from spacy.matcher import Matcher
 
+from services import sparql_query_builder_for_preferences
 nlp = spacy.load("en_core_web_sm")  # Load a small English language model
 
 def create_entity_matcher_patterns(file_path):
@@ -81,3 +82,11 @@ def get_input_from_text(text):
 
     return my_preferences
     
+def set_user_preferences(text):
+    sentences = text.split('. ')
+    queries = []
+    for sentence in sentences:
+        my_preferences = get_input_from_text(sentence)
+        queries.append(sparql_query_builder_for_preferences(my_preferences))
+ 
+    return queries
