@@ -70,8 +70,23 @@ def clean_preferences(preferences):
         if isinstance(preferences[info], dict):
             info_temp = {key: value for key, value in preferences[info].items() if value is not None and (not isinstance(value, set) or len(value) > 0)}
             preferences[info] = info_temp
-    print(preferences)
+    # print(preferences)
     return preferences
+
+def combine_dict(preferences1, preferences2):
+    for key, value2 in preferences2.items():
+        if key in preferences1:
+            value1 = preferences1[key]
+            if isinstance(value1, dict) and isinstance(value2, dict):
+                preferences1[key] = {**value1, **value2}
+            elif isinstance(value1, set) and isinstance(value2, set):
+                preferences1[key] = value1.union(value2)
+            else:
+                preferences1[key] = value2
+        else:
+            preferences1[key] = value2
+
+    return preferences1
 
 def get_input_from_text(text):
     artist_file_path = "D:\\facultate - anul 2\\ViRe---Vinyl-Recommender-Private\\backend\\services\\recommendation\\src\\services\\artists.txt"  # Replace with the actual path to your artist names file
@@ -85,9 +100,18 @@ def get_input_from_text(text):
     
 def set_user_preferences(text):
     sentences = text.split('. ')
-    queries = []
+    my_preferences_union = dict()
     for sentence in sentences:
         my_preferences = get_input_from_text(sentence)
-        queries.append(sparql_query_builder_for_preferences(my_preferences))
- 
-    return queries
+        my_preferences_union = combine_dict(my_preferences_union, my_preferences)
+    
+    print(my_preferences_union)
+
+    for key, value in my_preferences_union.items():
+        if isinstance(value, dict):
+            for nested_key, nested_value in value.items():
+                if isinstance(nested_value, set):
+                    my_preferences_union[key][nested_key] = list(nested_value)
+   
+
+    return sparql_query_builder_for_preferences(my_preferences_union)

@@ -13,8 +13,8 @@ def add_preference():
         return {"error": "Missing text"}, 400
     
     queries = set_user_preferences(text)
-
-    res = requests.post("http://localhost:5003/queries", json={"queries": queries}, headers=request.headers).json()
+    print(queries)
+    res = requests.post("http://localhost:5003/queries", json={"queries": [queries]}, headers=request.headers).json()
     print(res)
 
     return {
