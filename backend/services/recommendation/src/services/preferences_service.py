@@ -1,7 +1,7 @@
 import spacy
 from spacy.matcher import Matcher
 
-from services import sparql_query_builder_for_preferences
+from services.query_builder import sparql_query_builder_for_preferences
 nlp = spacy.load("en_core_web_sm")  # Load a small English language model
 
 def create_entity_matcher_patterns(file_path):
