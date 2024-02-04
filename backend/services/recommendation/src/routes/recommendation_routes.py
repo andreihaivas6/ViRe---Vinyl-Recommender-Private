@@ -1,20 +1,24 @@
 from flask import Blueprint
 from flask import request
-
+from services.preferences_service import get_input_from_text
+from services.query_builder import sparql_query_builder_for_preferences
 from others import auth_middleware, Utils
 
 app_recommendation = Blueprint("app_recommendation", __name__)
 
 @app_recommendation.route("/preference", methods=["POST"])
-@auth_middleware
+# @auth_middleware
 def add_preference():
     text = request.json.get("text", None)
     if not text:
         return {"error": "Missing text"}, 400
     
-    # TODO: NLP Processing of text
-    # TODO: Resulting preference to be saved in nosql database
-
+    sentences = text.split('. ')
+    query = ""
+    for sentence in sentences:
+        my_preferences = get_input_from_text(sentence)
+        query += sparql_query_builder_for_preferences(my_preferences) + "\n\n\n"
+ 
     return {
         "msg": "Preference added"
     }, 201

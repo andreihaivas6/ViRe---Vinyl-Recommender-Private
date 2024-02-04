@@ -1,0 +1,2 @@
+from .similar_artist_service import *
+from .similar_artist_service import get_similar_artists_by_name
