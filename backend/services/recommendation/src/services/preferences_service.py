@@ -89,8 +89,9 @@ def combine_dict(preferences1, preferences2):
     return preferences1
 
 def get_input_from_text(text):
-    artist_file_path = "D:\\facultate - anul 2\\ViRe---Vinyl-Recommender-Private\\backend\\services\\recommendation\\src\\services\\artists.txt"  # Replace with the actual path to your artist names file
-    genre_file_path = "D:\\facultate - anul 2\\ViRe---Vinyl-Recommender-Private\\backend\\services\\recommendation\\src\\services\\genres.txt"   # Replace with the actual path to your genre names file
+
+    artist_file_path = "services/artists.txt"  # Replace with the actual path to your artist names file
+    genre_file_path = "services/genres.txt"   # Replace with the actual path to your genre names file
 
     my_preferences = extract_info_with_spacy(text, artist_file_path, genre_file_path)
 
