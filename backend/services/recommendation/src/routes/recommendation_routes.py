@@ -22,9 +22,10 @@ def add_preference():
     }, 201
 
 @app_recommendation.route("/recommend", methods=["GET"])
-# @auth_middleware
+@auth_middleware
 def recommend():
     user_id = Utils.get_user_id_from_token()
+    preferences = Utils.get_preferences_for_user(user_id)
 
     # TODO: Get preferences from nosql database / cache by user_id
     # TODO: Use preferences to call -> Sparql service -> which queries Stardog (from DBpedia) -> returns recommendations
