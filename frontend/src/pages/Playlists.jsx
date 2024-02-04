@@ -91,7 +91,7 @@ export default function FriendProfile() {
     let rows = []
     for (let index in data ){
         let playlist = data[index]
-        let no_tracks = playlist.track_ids !== undefined ? playlist.track_ids.length : 0
+        let no_tracks = playlist.imported_from_jspf ? playlist.tracks.length : playlist.track_ids !== undefined ? playlist.track_ids.length : 0
         rows.push({
             id: parseInt(index) + 1,
             playlist_name: playlist.playlist_name,
