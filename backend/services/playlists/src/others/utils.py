@@ -86,3 +86,18 @@ class Utils:
     @staticmethod
     def build_song_ids(ids):
         return ' '.join([f'<http://purl.org/ontology/mo/#song-{id}>' for id in ids])
+    
+    @staticmethod
+    def get_tracklist(res: dict):
+        result = list()
+        for elem in res['result']['results']['bindings']:
+            title = elem["title"]["value"]
+            id = title.replace(' ', '_').lower().replace('"', '').replace('.','').replace('\'', '').replace('<', '').replace('>', '')
+            result.append({
+                "track_id": id,
+                "title": title,
+                "genre": elem["genre"]["value"],
+                "duration": elem["duration"]["value"],
+                "date": elem["date"]["value"],
+            })
+        return result

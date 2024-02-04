@@ -42,20 +42,12 @@ def get_playlist_by_id(playlist_id: int):
                     }
                 """
             
-            res = requests.post("http://localhost:5003/query", json={"query": query})
-            # TODO: get tracks from sparql service using track_ids and append it to playlist for return
-            """add field "tracks": [ {}, 
-                    {
-                        "title": "title",
-                        "artist": "artist",
-                        "album": "album",
-                        "duration": "duration",
-                        "genre": "genre",
-                        "date": "date"
-                    }, ...] 
-                """
-            return playlist.to_json()
-        
+            res = requests.post("http://localhost:5003/query", json={"query": query}, headers=request.headers).json()
+            tracklist = Utils.get_tracklist(res)
+            
+            playlist = playlist.to_json()
+            playlist["tracks"] = tracklist
+            return playlist
         else:
             return playlist_repository.add_track_to_jspf_playlist(playlist)
             
@@ -76,38 +68,32 @@ def get_playlists_of_user_id():
         shared_playlists = playlist_repository.get_playlists_shared_with_username(Utils.get_user_name_from_token())
         playlists.extend(shared_playlists)
 
+        # return playlists
+
         playlists_to_return = list()
         for playlist in playlists:
             if not playlist.imported_from_jspf:
                 track_ids = playlist.track_ids
-                # tracks_ids should looks like this: ['songname1', 'songname2', ...]
-                ids_build = Utils.build_song_ids(track_ids)
-                query = """
-                    SELECT ?songURI ?title ?genre ?duration ?date
-                        WHERE {
-                        VALUES ?songURI {""" + ids_build + """}
+                # # tracks_ids should looks like this: ['songname1', 'songname2', ...]
+                # ids_build = Utils.build_song_ids(track_ids)
+                # query = """
+                #     SELECT ?songURI ?title ?genre ?duration ?date
+                #         WHERE {
+                #         VALUES ?songURI {""" + ids_build + """}
 
-                        ?songURI a ns1:Song ;
-                                    dc:title ?title ;
-                                    dc:date ?date ;
-                                    ns1:duration ?duration ;
-                                    ns1:genre ?genre .
-                        }
-                    """
+                #         ?songURI a ns1:Song ;
+                #                     dc:title ?title ;
+                #                     dc:date ?date ;
+                #                     ns1:duration ?duration ;
+                #                     ns1:genre ?genre .
+                #         }
+                #     """
                 
-                res = requests.post("http://localhost:5003/query", json={"query": query})
-
-                # TODO: get tracks from sparql service using track_ids and append it to playlist for return
-                """add field "tracks": [ {}, 
-                    {
-                        "title": "title",
-                        "artist": "artist",
-                        "album": "album",
-                        "duration": "duration",
-                        "genre": "genre",
-                        "date": "date"
-                    }, ...] 
-                """
+                # res = requests.post("http://localhost:5003/query", json={"query": query}).json()
+                # tracklist = Utils.get_tracklist(res)
+                
+                # new_playlist = playlist.to_json()
+                # new_playlist["tracks"] = tracklist
 
                 playlists_to_return.append(playlist.to_json())
             else:
@@ -133,19 +119,25 @@ def get_playlists_of_user_id_path(user_id: int):
         for playlist in playlists:
             if not playlist.imported_from_jspf:
                 track_ids = playlist.track_ids
+                # ids_build = Utils.build_song_ids(track_ids)
+                # query = """
+                #     SELECT ?songURI ?title ?genre ?duration ?date
+                #         WHERE {
+                #         VALUES ?songURI {""" + ids_build + """}
 
-                # TODO: get tracks from sparql service using track_ids and append it to playlist for return
-                """add field "tracks": [ {}, 
-                    {
-                        "title": "title",
-                        "artist": "artist",
-                        "album": "album",
-                        "duration": "duration",
-                        "genre": "genre",
-                        "date": "date"
-                    }, ...] 
-                """
-
+                #         ?songURI a ns1:Song ;
+                #                     dc:title ?title ;
+                #                     dc:date ?date ;
+                #                     ns1:duration ?duration ;
+                #                     ns1:genre ?genre .
+                #         }
+                #     """
+                
+                # res = requests.post("http://localhost:5003/query", json={"query": query}).json()
+                # tracklist = Utils.get_tracklist(res)
+                
+                # new_playlist = playlist.to_json()
+                # new_playlist["tracks"] = tracklist
                 playlists_to_return.append(playlist.to_json())
             else:
                 playlists_to_return.append(
