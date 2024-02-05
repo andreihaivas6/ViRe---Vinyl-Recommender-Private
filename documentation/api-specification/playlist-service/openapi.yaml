@@ -1,0 +1,623 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: |-
+    This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
+    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
+    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
+
+    _If you're looking for the Swagger 2.0/OAS 2.0 version of Petstore, then click [here](https://editor.swagger.io/?url=https://petstore.swagger.io/v2/swagger.yaml). Alternatively, you can load via the `Edit > Load Petstore OAS 2.0` menu option!_
+
+    Some useful links:
+    - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
+    - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: https://petstore3.swagger.io/api/v3
+tags:
+- name: playlist
+  description: Operation about playlist
+- name: song
+  description: Operation about songs
+- name: artist
+  description: Operation about artists
+- name: album
+  description: Operation about album
+paths:
+  /playlist:
+    get:
+      tags:
+      - playlist
+      summary: Get playlists info and Filter by specific data
+      parameters:
+      - name: name
+        in: query
+        description: playlist name
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Playlist'
+      security:
+      - auth:
+        - auth
+    post:
+      tags:
+      - playlist
+      summary: Create playlist (or Upload JSPF/XSPF document)
+      requestBody:
+        description: Create playlist (or Upload JSPF/XSPF document)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+  /playlist/{playlistId}:
+    get:
+      tags:
+      - playlist
+      summary: Get playlist info
+      parameters:
+      - name: playlistId
+        in: path
+        description: playlist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+    put:
+      tags:
+      - playlist
+      summary: Update playlist
+      parameters:
+      - name: playlistId
+        in: path
+        description: playlist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Update an existent playlist in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+    delete:
+      tags:
+      - playlist
+      summary: Delete playlist
+      parameters:
+      - name: playlistId
+        in: path
+        description: playlist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+    patch:
+      tags:
+      - playlist
+      summary: Update playlist
+      parameters:
+      - name: playlistId
+        in: path
+        description: playlist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Update an existent playlist in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+  /playlist/{playlistId}/export:
+    get:
+      tags:
+      - playlist
+      summary: Get playlist info in JSPF/XSPF document
+      parameters:
+      - name: playlistId
+        in: path
+        description: playlist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+  /playlist/{playlistId}/share:
+    post:
+      tags:
+      - playlist
+      summary: Share playlist with friend
+      parameters:
+      - name: playlistId
+        in: path
+        description: playlist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Share playlist with friend
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/playlistId_share_body'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+  /playlist/{playlistId}/combine:
+    post:
+      tags:
+      - playlist
+      summary: Combine 2 playlists
+      parameters:
+      - name: playlistId
+        in: path
+        description: playlist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Combine 2 playlists
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/playlistId_combine_body'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+  /playlist/{playlistId}/addSong:
+    post:
+      tags:
+      - playlist
+      summary: Add song to playlist
+      parameters:
+      - name: playlistId
+        in: path
+        description: playlist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Add song to playlist
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/playlistId_addSong_body'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+  /playlist/{playlistId}/deleteSong:
+    post:
+      tags:
+      - playlist
+      summary: Delete song from playlist
+      parameters:
+      - name: playlistId
+        in: path
+        description: playlist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Delete song from playlist
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/playlistId_deleteSong_body'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+  /song:
+    get:
+      tags:
+      - song
+      summary: Get songs info and Filter my specific data
+      parameters:
+      - name: name
+        in: query
+        description: song name
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Song'
+      security:
+      - auth:
+        - auth
+  /song/{songId}:
+    get:
+      tags:
+      - song
+      summary: Get song info
+      parameters:
+      - name: songId
+        in: path
+        description: song ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+  /artist:
+    get:
+      tags:
+      - artist
+      summary: Get artists info and Filter my specific data
+      parameters:
+      - name: name
+        in: query
+        description: artist name
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artist'
+      security:
+      - auth:
+        - auth
+  /artist/{artistId}:
+    get:
+      tags:
+      - artist
+      summary: Get artist info
+      parameters:
+      - name: artistId
+        in: path
+        description: artist ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+  /album:
+    get:
+      tags:
+      - album
+      summary: Get albums info and Filter my specific data
+      parameters:
+      - name: name
+        in: query
+        description: album name
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Album'
+      security:
+      - auth:
+        - auth
+  /album/{albumId}:
+    get:
+      tags:
+      - album
+      summary: Get album info
+      parameters:
+      - name: albumId
+        in: path
+        description: album ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        "404":
+          description: Not found
+      security:
+      - auth:
+        - auth
+components:
+  schemas:
+    Playlist:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: nume album
+        date_created:
+          type: date
+          example: 10-10-2022 14:14
+        date_modified:
+          type: date
+          example: 10-10-2022 14:14
+        shared:
+          type: bool
+          example: true
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Song'
+    Song:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: cantecul meu
+        artist:
+          $ref: '#/components/schemas/Artist'
+        genre:
+          type: string
+          example: rock
+        duration:
+          type: int64
+          example: 231
+        album:
+          $ref: '#/components/schemas/Album'
+    Artist:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Ion Cantaretul
+        debut_year:
+          type: int
+          example: 1999
+        type:
+          type: string
+          example: artist
+        genre:
+          type: string
+          example: rock
+    Album:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: albumul meu
+        year:
+          type: int
+          example: 1999
+        genre:
+          type: string
+          example: rock
+    playlistId_share_body:
+      type: object
+      properties:
+        friendId:
+          type: string
+          example: 3we4rftgyh
+    playlistId_combine_body:
+      type: object
+      properties:
+        playlistToCombineWithId:
+          type: string
+          example: 3we4rftgyh
+        type:
+          type: string
+          example: intersect
+    playlistId_addSong_body:
+      type: object
+      properties:
+        songId:
+          type: string
+          example: 3we4rftgyh
+    playlistId_deleteSong_body:
+      type: object
+      properties:
+        songId:
+          type: string
+          example: 3we4rftgyh
+  securitySchemes:
+    auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: /auth
+          scopes: {}
