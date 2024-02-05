@@ -39,7 +39,7 @@ export default function App() {
                 <Route path='/search-friends' element={<PrivateRoute><SearchFriends/></PrivateRoute>}></Route>
 
                 <Route path='/recommendation' element={<PrivateRoute><Recommendations/></PrivateRoute>}></Route>
-                <Route path='/vinyls' element={<PrivateRoute><Vinyls/></PrivateRoute>}></Route>
+                <Route path='/vinyl/info' element={<PrivateRoute><Vinyls/></PrivateRoute>}></Route>
                 <Route path='/playlists' element={<PrivateRoute><Playlists/></PrivateRoute>}></Route>
                 <Route path='/profile' element={<PrivateRoute><Profile/></PrivateRoute>}></Route>
 
