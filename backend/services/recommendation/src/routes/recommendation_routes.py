@@ -3,6 +3,7 @@ from flask import request
 from services.preferences_service import set_user_preferences
 from others import auth_middleware, Utils
 import requests
+import json
 
 from services import get_recommendation_for_user 
 app_recommendation = Blueprint("app_recommendation", __name__)
@@ -15,13 +16,11 @@ def add_preference():
         return {"error": "Missing text"}, 400
     
     queries = set_user_preferences(text)
-    print(queries)
     res = requests.post("http://localhost:5003/queries", json={"queries": [queries]}, headers=request.headers).json()
-    print(res)
+    # print(res)
 
-    return {
-        "msg": "Preference added"
-    }, 201
+    result = Utils.make_vinyls_readable(res)
+    return result
 
 @app_recommendation.route("/recommend", methods=["GET"])
 # @auth_middleware
