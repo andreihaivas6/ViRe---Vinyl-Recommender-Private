@@ -1,10 +1,63 @@
 
 from services import get_similar_artists_by_name
 
+def build_query_artists_with_limit(artist_name, limit):
+    query = """
+SELECT DISTINCT ?vinyl ?title ?artist ?genre ?imageUrl ?track ?date
+    WHERE {
+        ?vinyl a ns1:Vinyl ;
+        dc:title ?title ;
+        ns1:genre ?genre ;
+        ns1:imageUrl ?imageUrl ;
+        dc:date ?date ;
+        ns1:track ?track ;
+        foaf:name ?artist .
+        """
+    query += f"FILTER (CONTAINS(UCASE(?artist), UCASE('{artist_name}')))"
+    query += "} LIMIT " + str(limit) 
+
+    return query
+
+def build_query_genres_with_limit(genre, limit):
+    query = """
+SELECT DISTINCT ?vinyl ?title ?artist ?genre ?imageUrl ?track ?date
+    WHERE {
+        ?vinyl a ns1:Vinyl ;
+        dc:title ?title ;
+        ns1:genre ?genre ;
+        ns1:imageUrl ?imageUrl ;
+        dc:date ?date ;
+        ns1:track ?track ;
+        foaf:name ?artist .
+        """
+    query += f"FILTER ((REGEX(?genre,\"{genre}\",\"i\")))"
+    query += "} LIMIT " + str(limit) 
+
+    return query
+
+
+def build_query_genres_by_year_with_limit(year, limit):
+    query = """
+SELECT DISTINCT ?vinyl ?title ?artist ?genre ?imageUrl ?track ?date
+    WHERE {
+        ?vinyl a ns1:Vinyl ;
+        dc:title ?title ;
+        ns1:genre ?genre ;
+        ns1:imageUrl ?imageUrl ;
+        dc:date ?date ;
+        ns1:track ?track ;
+        foaf:name ?artist .
+        """
+    query += f"FILTER (?date = {year})"
+    query += "} LIMIT " + str(limit) 
+
+    return query
+
+
 
 def build_query_artists(artist_name):
     query = """
-SELECT DISTINCT ?vinyl ?title ?artist ?genre
+SELECT DISTINCT ?vinyl ?title ?artist ?genre ?imageUrl ?track ?date
     WHERE {
         ?vinyl a ns1:Vinyl ;
         dc:title ?title ;
@@ -31,7 +84,7 @@ def get_similar_artists_query(artist_name):
 def sparql_query_builder_for_preferences(preferences):
     # preferences = {'like': {}, 'dislike': {'before': 2020,'genre':{'hip-hop'}}, 'love': {'artist': {'verdi', 'rossini','the beatles'}, 'before': 2020, 'after': 2014}, 'hate': {}, 'sentiments': []}
     query_base = """
-SELECT DISTINCT ?vinyl ?title ?artist ?genre
+SELECT DISTINCT ?vinyl ?title ?artist ?genre ?imageUrl ?track ?date
     WHERE {
         ?vinyl a ns1:Vinyl ;
         dc:title ?title ;

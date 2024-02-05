@@ -1,9 +1,10 @@
 # from datetime import datetime, timedelta
 import datetime
 from services import combine_dict
+from services import build_query_artists_with_limit, build_query_genres_with_limit, build_query_genres_by_year_with_limit
+from services import get_similar_artists_query
 
 def get_data_for_each_period(preferences):
-    # print(preferences)
     s = datetime.datetime.now().strftime("%d/%m/%Y")
 
     result = {
@@ -25,7 +26,7 @@ def get_data_for_each_period(preferences):
 
 def get_recommendation_for_user(preferences):
     data = get_data_for_each_period(preferences)
-    # print(data)
+
     result = {
         "last_day": {
             "artists": {},
@@ -55,91 +56,85 @@ def get_recommendation_for_user(preferences):
     return result
 
 
+def get_recommendation_per_periods(preferences):
+    no_recommendation = 100
+    no_recommendation_last_day = 30
+    no_recommendation_last_week = 50
+    no_recommendation_other = 20
+    queries_to_run = []
+    try:
+        if 'last_day' in preferences:
+            last_day_preferences = preferences['last_day']
+            if 'artists' in last_day_preferences:
+                total_no_artists = sum(last_day_preferences['artists'].values())
+                for artist in last_day_preferences['artists']:
+                    limit = int((last_day_preferences['artists'][artist] / total_no_artists) * no_recommendation_last_day)
+                    queries_to_run.append(build_query_artists_with_limit(artist, limit))
+            if 'genres' in last_day_preferences:
+                total_no_genres = sum(last_day_preferences['genres'].values())
+                for genre in last_day_preferences['genres']:
+                    limit = int((last_day_preferences['genres'][genre] / total_no_genres) * no_recommendation_last_day)
+                    queries_to_run.append(build_query_genres_with_limit(genre, limit))
+            if 'years' in last_day_preferences:
+                total_no_years = sum(last_day_preferences['years'].values())
+                for year in last_day_preferences['years']:
+                    limit = int((last_day_preferences['years'][year] / total_no_years) * no_recommendation_last_day)
+                    queries_to_run.append(build_query_genres_by_year_with_limit(year, limit))
+        elif 'last_week' in preferences:
+            last_week_preferences =preferences['last_week']
+            if 'artists' in last_week_preferences:
+                total_no_artists = sum(last_week_preferences['artists'].values())
+                for artist in last_week_preferences['artists']:
+                    limit = int((last_week_preferences['artists'][artist] / total_no_artists) * no_recommendation_last_week)
+                    queries_to_run.append(build_query_artists_with_limit(artist, limit))
+            if 'genres' in last_week_preferences:
+                total_no_genres = sum(last_week_preferences['genres'].values())
+                for genre in last_week_preferences['genres']:
+                    limit = int((last_week_preferences['genres'][genre] / total_no_genres) * no_recommendation_last_week)
+                    queries_to_run.append(build_query_genres_with_limit(genre, limit))
+            if 'years' in last_week_preferences:
+                total_no_years = sum(last_week_preferences['years'].values())
+                for year in last_week_preferences['years']:
+                    limit = int((last_week_preferences['years'][year] / total_no_years) * no_recommendation_last_week)
+                    queries_to_run.append(build_query_genres_by_year_with_limit(year, limit))
+        elif 'other' in preferences:
+            other_preferences = preferences['other']
+            if 'artists' in other_preferences:
+                total_no_artists = sum(other_preferences['artists'].values())
+                for artist in other_preferences['artists']:
+                    limit = int((other_preferences['artists'][artist] / total_no_artists) * no_recommendation_other)
+                    queries_to_run.append(build_query_artists_with_limit(artist, limit))
+            if 'genres' in other_preferences:
+                total_no_genres = sum(other_preferences['genres'].values())
+                for genre in other_preferences['genres']:
+                    limit = int((other_preferences['genres'][genre] / total_no_genres) * no_recommendation_other)
+                    queries_to_run.append(build_query_genres_with_limit(genre, limit))
+            if 'years' in other_preferences:
+                total_no_years = sum(other_preferences['years'].values())
+                for year in other_preferences['years']:
+                    limit = int((other_preferences['years'][year] / total_no_years) * no_recommendation_other)
+                    queries_to_run.append(build_query_genres_by_year_with_limit(year, limit))
+    except Exception as e:
+        print(e)
 
-preferences = {
-    "user_id": 1,
-    "preferences": {
-        "30/01/2024": {
-            "artists": {
-                "Beatles": 3,
-                "Queen": 2
-            },
-            "genres": {
-                "rock": 3,
-                "pop": 2
-            },
-            "years": {
-                "1960": 3,
-                "1970": 2
-            }
-        },
-        "17/01/2024": {
-            "artists": {
-                "Elvis Presley": 4,
-                "Michael Jackson": 1
-            },
-            "genres": {
-                "rock": 2,
-                "pop": 3
-            },
-            "years": {
-                "1950": 2,
-                "1980": 3
-            }
-        },
-        "05/02/2024": {
-            "artists": {
-                "Bob Dylan": 2,
-                "Led Zeppelin": 2,
-                "Pink Floyd": 1
-            },
-            "genres": {
-                "folk": 2,
-                "rock": 2,
-                "psychedelic": 1
-            },
-            "years": {
-                "1960": 2,
-                "1970": 2,
-                "1980": 1
-            }
-        },
-        "04/02/2024": {
-            "artists": {
-                "Prince": 3,
-                "David Bowie": 1,
-                "Madonna": 2
-            },
-            "genres": {
-                "pop": 3,
-                "funk": 1,
-                "rock": 2
-            },
-            "years": {
-                "1970": 2,
-                "1980": 3,
-                "1990": 1
-            }
-        },
-        "20/02/2023": {
-            "artists": {
-                "The Rolling Stones": 2,
-                "U2": 3,
-                "Radiohead": 1
-            },
-            "genres": {
-                "rock": 3,
-                "alternative": 1,
-                "pop": 2
-            },
-            "years": {
-                "1960": 1,
-                "1980": 2,
-                "1990": 1
-            }
-        }
-    }
-    } 
-# get_recommendation_for_user(preferences['preferences'])
+    return queries_to_run
 
 
+def get_recommendation_for_user_by_artists(preferences):
+    queries_to_run = []
+    for timestamp in preferences:
+        total_no_artists = sum(preferences[timestamp]['artists'].values())
+        for artist in preferences[timestamp]['artists']:
+            limit = int((preferences[timestamp]['artists'][artist] / total_no_artists) * 100)
+            queries_to_run.append(build_query_artists_with_limit(artist, limit))
+            queries_to_run.extend(get_similar_artists_query([artist])[:3])
+    return queries_to_run
+
+def get_recommendation_for_user_by_genres(preferences):
+    queries_to_run = []
+    for timestamp in preferences:
+        total_no_genres = sum(preferences[timestamp]['genres'].values())
+        for genre in preferences[timestamp]['genres']:
+            limit = int((preferences[timestamp]['genres'][genre] / total_no_genres) * 100)
+            queries_to_run.append(build_query_genres_with_limit(genre, limit))
+    return queries_to_run
