@@ -10,7 +10,7 @@ from services import get_recommendation_for_user
 app_recommendation = Blueprint("app_recommendation", __name__)
 
 @app_recommendation.route("/preference", methods=["POST"])
-# @auth_middleware
+@auth_middleware
 def add_preference():
     text = request.json.get("text", None)
     if not text:
@@ -24,93 +24,99 @@ def add_preference():
     return result
 
 @app_recommendation.route("/recommend", methods=["GET"])
-# @auth_middleware
+@auth_middleware
 def recommend():
     try:
-        preferences = {
-        "user_id": 1,
-        "preferences": {
-            "16/01/2024": {
-                "artists": {
-                    "Beatles": 3,
-                    "Queen": 2
-                },
-                "genres": {
-                    "rock": 3,
-                    "pop": 2
-                },
-                "years": {
-                    "1960": 3,
-                    "1970": 2
-                }
-            },
-            "17/01/2024": {
-                "artists": {
-                    "Elvis Presley": 4,
-                    "Michael Jackson": 1
-                },
-                "genres": {
-                    "rock": 2,
-                    "pop": 3
-                },
-                "years": {
-                    "1950": 2,
-                    "1980": 3
-                }
-            },
-            "5/02/2024": {
-                "artists": {
-                    "Bob Dylan": 2,
-                    "Led Zeppelin": 2,
-                    "Pink Floyd": 1
-                },
-                "genres": {
-                    "folk": 2,
-                    "rock": 2,
-                    "psychedelic": 1
-                },
-                "years": {
-                    "1960": 2,
-                    "1970": 2,
-                    "1980": 1
-                }
-            },
-            "4/02/2024": {
-                "artists": {
-                    "Prince": 3,
-                    "David Bowie": 1,
-                    "Madonna": 2
-                },
-                "genres": {
-                    "pop": 3,
-                    "funk": 1,
-                    "rock": 2
-                },
-                "years": {
-                    "1970": 2,
-                    "1980": 3,
-                    "1990": 1
-                }
-            },
-            "20/02/2023": {
-                "artists": {
-                    "The Rolling Stones": 2,
-                    "U2": 3,
-                    "Radiohead": 1
-                },
-                "genres": {
-                    "rock": 3,
-                    "alternative": 1,
-                    "pop": 2
-                },
-                "years": {
-                    "1960": 1,
-                    "1980": 2,
-                    "1990": 1
-                }
-            }
-        }
-        } 
+        preferences = Utils.get_preferences_for_user(Utils.get_user_id_from_token())
+        if not preferences:
+            print("No preferences found for this user")
+            return {
+                "msg": "No preferences found for this user"
+            }, 400
+        # preferences = {
+        # "user_id": 1,
+        # "preferences": {
+        #     "16/01/2024": {
+        #         "artists": {
+        #             "Beatles": 3,
+        #             "Queen": 2
+        #         },
+        #         "genres": {
+        #             "rock": 3,
+        #             "pop": 2
+        #         },
+        #         "years": {
+        #             "1960": 3,
+        #             "1970": 2
+        #         }
+        #     },
+        #     "17/01/2024": {
+        #         "artists": {
+        #             "Elvis Presley": 4,
+        #             "Michael Jackson": 1
+        #         },
+        #         "genres": {
+        #             "rock": 2,
+        #             "pop": 3
+        #         },
+        #         "years": {
+        #             "1950": 2,
+        #             "1980": 3
+        #         }
+        #     },
+        #     "5/02/2024": {
+        #         "artists": {
+        #             "Bob Dylan": 2,
+        #             "Led Zeppelin": 2,
+        #             "Pink Floyd": 1
+        #         },
+        #         "genres": {
+        #             "folk": 2,
+        #             "rock": 2,
+        #             "psychedelic": 1
+        #         },
+        #         "years": {
+        #             "1960": 2,
+        #             "1970": 2,
+        #             "1980": 1
+        #         }
+        #     },
+        #     "4/02/2024": {
+        #         "artists": {
+        #             "Prince": 3,
+        #             "David Bowie": 1,
+        #             "Madonna": 2
+        #         },
+        #         "genres": {
+        #             "pop": 3,
+        #             "funk": 1,
+        #             "rock": 2
+        #         },
+        #         "years": {
+        #             "1970": 2,
+        #             "1980": 3,
+        #             "1990": 1
+        #         }
+        #     },
+        #     "20/02/2023": {
+        #         "artists": {
+        #             "The Rolling Stones": 2,
+        #             "U2": 3,
+        #             "Radiohead": 1
+        #         },
+        #         "genres": {
+        #             "rock": 3,
+        #             "alternative": 1,
+        #             "pop": 2
+        #         },
+        #         "years": {
+        #             "1960": 1,
+        #             "1980": 2,
+        #             "1990": 1
+        #         }
+        #     }
+        # }
+        # } 
         result_per_periods = get_recommendation_for_user(preferences)
        
         queries_to_run = get_recommendation_per_periods(result_per_periods)
@@ -124,9 +130,9 @@ def recommend():
         return {
             "msg": "Recommendations fetched",
             "data": {
-                "complete": res_complete,
-                "by_artist": res_by_artist,
-                "by_genre": res_by_genre
+                "complete": Utils.make_vinyls_readable(res_complete),
+                "by_artist": Utils.make_vinyls_readable(res_by_artist),
+                "by_genre": Utils.make_vinyls_readable(res_by_genre)
             }
         }, 200
     except Exception as e:

@@ -41,7 +41,7 @@ class PreferencesRepository:
             if "genre" in track:
                 preferences["genres"][track["genre"]] += 1
             if "date" in track:
-                date = int(int(track["date"]) / 10) * 10
+                date = str(int(int(track["date"]) / 10) * 10)
                 preferences["years"][date] += 1
         
         self.publish_preferences(preferences)
@@ -99,7 +99,7 @@ class PreferencesRepository:
         client = MongoClient(local_uri)
 
         db = client['mydatabase']
-        collection = db['preferences_test-5']
+        collection = db['preferences_test-6'] # 5 - for old db
 
         result = collection.find_one({"user_id": user_id})
 

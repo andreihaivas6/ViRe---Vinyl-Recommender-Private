@@ -31,9 +31,11 @@ class Utils:
         client = MongoClient(local_uri)
 
         db = client['mydatabase']
-        collection = db['preferences_test-5']
+        collection = db['preferences_test-6']
 
-        return collection.find_one({"user_id": user_id})
+        result = collection.find_one({"user_id": user_id})
+        print(result)
+        return result if result else {}
 
     @staticmethod
     def make_vinyls_readable(res):
