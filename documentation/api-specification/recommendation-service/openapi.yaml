@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: |-
+    This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
+    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
+    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
+
+    _If you're looking for the Swagger 2.0/OAS 2.0 version of Petstore, then click [here](https://editor.swagger.io/?url=https://petstore.swagger.io/v2/swagger.yaml). Alternatively, you can load via the `Edit > Load Petstore OAS 2.0` menu option!_
+
+    Some useful links:
+    - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
+    - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: https://petstore3.swagger.io/api/v3
+tags:
+- name: app
+  description: Operation about third party apps
+- name: preference
+  description: Operation about user preferences
+- name: recommendation
+  description: Operation about recommendations
+paths:
+  /app/linkDiscogs:
+    post:
+      tags:
+      - app
+      summary: Link Discogs account in app
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Failed
+      security:
+      - auth:
+        - auth
+  /app/linkLastfm:
+    post:
+      tags:
+      - app
+      summary: Link Last.fm account in app
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Failed
+      security:
+      - auth:
+        - auth
+  /preference:
+    post:
+      tags:
+      - preference
+      summary: Add preference as user input
+      requestBody:
+        description: Add user preference
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/preference_body'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Failed
+      security:
+      - auth:
+        - auth
+  /recommendation:
+    get:
+      tags:
+      - recommendation
+      summary: "Provide recommendation to user by its input, its created playlists,\
+        \ playlists from Last.fm or past purchases (all together or only specific\
+        \ ones)"
+      parameters:
+      - name: basedOn
+        in: query
+        description: Specific elements the user wants its recommendation (all by default).
+          In case he wants recommendation only for specific album
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          default: all
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vinyl'
+        "400":
+          description: Failed
+      security:
+      - auth:
+        - auth
+components:
+  schemas:
+    Vinyl:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: nume album
+        year:
+          type: date
+          example: 10-10-2022 14:14
+        genre:
+          type: string
+          example: rock
+        artist_name:
+          example: Ion Cantaretul
+    preference_body:
+      type: object
+      properties:
+        text:
+          type: string
+          example: I like Mozart sometimes and I love Taylor Swift music before 2010.
+  securitySchemes:
+    auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: /auth
+          scopes: {}

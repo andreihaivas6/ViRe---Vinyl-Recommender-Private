@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://w3c.github.io/scholarly-html/css/scholarly.min.css" type="text/css" rel="stylesheet">
+    <title>Raport</title>
+
+</head>
+
+<body>
+    <header>
+        <h1>VIRE (Vinyl Recommender Tool)</h1>
+    </header>
+
+    <div role="contentinfo">
+        <ol role="directory">
+
+            <li><a href="#projectDescription"> <span>1. Project description </span> </a>
+            </li>
+            <li><a href="#useCases"><span>2. </span>Use Cases</a>
+                <ol role="directory">
+                    <li><a href="#endusers"><span>2.1 </span> End Users</a></li>
+                    <li><a href="#use-case"><span>2.2 </span> Use cases description</a></li>
+                </ol>
+                
+            </li>
+            <li><a href="#architecture"><span>3. </span> Architecture</a>
+                <ol role="directory">
+                    <li><a href="#overallarchitecture"><span>3.1 </span>Overall Architecture</a></li>
+                    <li><a href="#services"><span>3.2 </span> Services </a>
+                    <ol>
+                        <li><a href="#user_microservice"><span>3.2.1 </span> User service </a></li>
+                        <li><a href="#playlist_microservice"><span>3.2.2 </span> Playlist service </a></li>
+                        <li><a href="#recommendation_microservice"><span>3.2.3 </span> Recommendation service </a></li>
+                    </ol>
+                    <li><a href="#openapi"><span>3.3 </span> OpenAPI Specification </a>
+                    </li>
+                </ol>
+            </li>
+            <li><a href="#internalDataStructures"><span>4. </span> Internal Data Structures/Models</a>
+                <ol role="directory">
+                    <li><a href="#user_service"><span>4.1 </span> User Service Database</a></li>
+                    <li><a href="#playlist_service"><span>4.2 </span> Playlist Service Database</a></li>
+                    <li><a href="#recommandation_service"><span>4.3 </span> Recommendation Service Database</a></li>
+                    <li><a href="#rdf"><span>4.4 </span> RDF </a></li>
+
+                </ol>
+            </li>
+
+            <li><a href="#technologiesUsed"><span>5. </span>Technologies Used</a>
+                <ol role="directory">
+                    <li><a href="#python"><span>5.1 </span>Python</a></li>
+                    <li><a href="#flask"><span>5.2 </span>Flask</a></li>
+                    <li><a href="#react"><span>5.3 </span>React</a></li>
+                    <li><a href="#mongodb"><span>5.4 </span>MongoDB</a></li>
+                    <li><a href="#postgres"><span>5.5 </span>PostgreSQL</a></li>
+                    <li><a href="#sparql"><span>5.6 </span>Sparql</a></li>
+                    <li><a href="#redis"><span>5.7 </span>Redis</a></li>
+                    <li><a href="#nlp"><span>5.8 </span>Controlled natural language</a></li>
+                </ol>
+            </li>
+
+            <li><a href="#externalData"><span>6. </span> External Data Sources</a></li>
+            <li><a href="#linkedDataPrinciples"><span>7. </span> Linked Data Principles</a></li>
+            <li><a href="#authors"><span>8. </span> Authors</a></li>
+            <li><a href="#bibliography"><span>9. </span> Bibliography</a></li>
+        </ol>
+    </div>
+
+    <section id="projectDescription">
+        <h2>1. Project description </h2>
+        <section id="project-descr">
+            <!-- <h3>1.3. Scopul proiectului</h3> -->
+            <p>
+                Vire is a system able to "intelligently" recommend
+                by exposing a SPARQL endpoint - vinyl music records according to various criteria:
+                user preferences (specified via controlled natural language constructs such as "I always
+                like/love/prefer classical music, especially opera music by Rossini or Verdi and performed by Angela
+                Gheorghiu or Juan Diego Flórez;
+                I sometimes like progressive rock and post-rock; I like only metal albums released before 2000;
+                I always dislike/hate rap and hip-hop; I dislike songs produced by Flood in the last 25 years"),
+
+                past song purchases on various music stores, playlists - available online via music streaming services:
+                Last.fm and alternative solutions and
+                locally - for instance, by uploading a JSPF/XSPF document.
+
+
+                The playlists could be created by the user or shared by her/his virtual "friends" (consider at least one
+                social network).
+                The system will use several music-related knowledge models and available public resources: Discogs,
+                MusicBrainz, Musicmoz Music Styles.
+            </p>
+        </section>
+    </section>
+
+    <section id="useCases">
+        <h2>2. Use Cases</h2>
+
+        <section id="endusers">
+            <h3>2.1. End Users</h3>
+            <p>
+                The end users of our application are people passionate about music who are looking for vinyl recommandations based on their preferences.
+                Additionally, they want to share their musical preferences with friends or they can make a new playlists together. For example, they might combine their playlists for a party so that everyone can listen to music that they both enjoy.
+
+            </p>
+        </section>
+        
+        <section id="use-case">
+            <h3>2.2. Use cases description</h3>
+
+            <p>
+
+                Initially, users have the option to either sign up for a new account or log in with an existing one.
+                Once logged in, they have the capability to create music playlists,
+                import existing ones using a JSPF file,
+                or link their last.fm profile.
+            </p>
+            <p>
+                They can also link their account to their music store profile,
+                which allows them to add songs they've previously purchased.
+
+                Users also have the opportunity to connect with friends and share their musical tastes, and combine
+                their playlists.
+                The users can also add description for they musical taste for example adding phrases like: "I sometimes
+                like progressive rock and post-rock; I like only metal albums released before 2000; I always
+                dislike/hate rap and hip-hop; I dislike songs produced by Flood in the last 25 years".
+            </p>
+            <p>
+                The application's main function is to integrate these features to provide personalized vinyl
+                recommendations based on these considerations.
+
+
+            </p>
+            <!-- <h3>6.2. Use Case Diagram</h3> -->
+            <img src="diagrams/usecase.jpg" alt="playlist_service">
+
+        </section>
+    </section>
+
+
+    <section id="architecture">
+        <h2>3. Architecture</h2>
+        <section id="overallarchitecture">
+            <h3> 3.1 Overall Architecture</h3>
+            <img src="diagrams/arhitecture.drawio.png" alt="arhitecture.drawio.png" style="width: 100%; height: auto;"
+            >
+            <div>
+                <div>After analysis the requirementes of the project, we concluded to the following arhitecture with the following components:</div>
+                <ol type="number">
+                    <li>
+                        The client will interact with our <b>web application</b>. There he will be able to create playlists, share them with friends and also search for any data regarding music.
+                        Also, he can link his Music Store and Music Streaming apps accounts to our web application. This way, we can get data from those apps and use it to recommend music to the user.
+                    </li>
+                    <li>
+                        The web application will communicate with the <b>API Gateway</b>, which will be responsible for routing the requests to the correct microservice. 
+                        There will be a microservice for each functionality of the web application, in total 3 microservices.
+                    </li>
+                    <li>
+                        <b>User microservice</b> will be the first microservice and will be responsible for <b>user</b> and <b>friends</b>. It will be responsible for authenticating the user and also for creating new accounts.
+                        Also, it will provide user profile and also manages the friends list.
+                    </li>
+                    <li>
+                        User microservice will communicate with <b>User database</b>. There will be stored all the user data, including the friends list.
+                    </li>
+                    <li>
+                        <b>Playlist microservice</b> will be the second microservice and will be responsible for <b>playlists</b>. It will be responsible for creating new playlists, adding songs to playlists and also for sharing playlists with friends.
+                        Also, it will provide data regarding music, such as: albums, artists, songs. 
+                    </li>
+                    <li>
+                        Playlist microservice will communicate with <b>Playlist database</b>. There will be stored all the playlists data. Also, there will be stored all the data regarding music.
+                    </li>
+                    <li>
+                        <b>Recommendation microservice</b> will be the third microservice and will be responsible for <b>recommendations</b>. It is responsible for collecting user preferences from its input.
+                        Also, it will be responsible for recommending music to the user, based on:
+                        <ul>
+                            <li>user input - regarding preferences;</li>
+                            <li>his created playlists;</li>
+                            <li>his playlists from Music Streaming apps;</li>
+                            <li>his past purchases from Music Store apps.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Recommendation microservice will communicate with <b>Preferences database</b>. There will be stored all the data regarding user preferences.
+                        The data will come from: 
+                        <ul>
+                            <li>user input - regarding preferences;</li>
+                            <li>his created playlists - <b>Daily scheduled analysis over user playlists</b></li>
+                            <li>his playlists from Music Streaming apps;</li>
+                            <li>his past purchases from Music Store apps.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <b>Daily scheduled analysis over user playlists</b> will be a scheduled task that will run every day and will analyze the user playlists in order to get more data regarding user preferences.
+                    </li>
+                    <li>
+                        <b>Cache</b> over Preferences database. It will be used to store the most accessed data from Preferences database. 
+                        This way, we can reduce the number of requests to the database as we will often need the information regarding users preferences.
+                    </li>
+                    <li>
+                        <b>Vinyl database</b> will be an internal dataset populated with possible vinyls that can be recommended to the user. 
+                        The data will be collected from the internet and will be stored in this database.
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="services">
+            <h3> 3.2 Services </h3>
+            <div>
+                In order to get a more understandable view of the architecture, we will dive in every microservice and explain its functionality.
+            </div>
+
+            <section id="user_microservice">
+                <h4> 3.2.1 User service</h4>
+
+                <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ccc; margin: 0 auto;">
+                    OpenAPI Specification can be found <a href="api-specification/user-service/index.html" style="color: #007bff; text-decoration: none; font-weight: bold;">here</a>.
+                </div> <br>  
+                
+                <img src="diagrams/arh-user-service.drawio.png" alt="arh-user_service.drawio.png">
+                
+                <div>
+                    <div>
+                        It will be the first microservice and will be responsible for <b>user</b> and <b>friends</b>. It will communicate with User database in order to get the data regarding users and friends.
+                        As we can see in the diagram, the functionalities of the microservice are divided into 3 modules:
+                        <ol>
+                            <li>
+                                <h4>User module</h4>
+                                <div>This module have the following functionalities:</div>
+                                <ul>
+                                    <li><b>See own profile</b> - the user can access data about his account on our application. </li>
+                                    <li><b>See other user profile</b> - users can view the profiles of other members, exploring their details.</li>
+                                    <li><b>Search for users</b> - enables users to search and discover other members based on different criteria, such as username</li>
+                                    <li><b>See users list</b> - provides a list of users on the platform, allowing exploration and connection with a diverse user base.</li>
+                                    <li><b>See friends suggestions</b> - suggests potential connections based on shared interests.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Auth module</h4>
+                                <div>This module have the following functionalities:</div>
+                                <ul>
+                                    <li><b>Authentication</b> - the process by which users confirm their identity, ensuring secure access to the platform and protecting their accounts from unauthorized use.</li>
+                                    <li><b>Account creation</b> - enables new users to register and create their accounts on the platform.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Friend module</h4>
+                                <div>This module have the following functionalities:</div>
+                                <ul>
+                                    <li><b>See friends profile</b> - allows users to view detailed information about their friends, including shared playlists within the platform.</li>
+                                    <li><b>Add friend</b> - enables users to add a user as a friend/follower</li>
+                                    <li><b>Remove friend</b> - provides users with the option to disconnect from friends, removing them from their friends list and limiting shared content.</li>
+                                    <li><b>Search friend</b> - allows users to search for specific friends within their network.</li>
+                                    <li><b>See friends list</b> - displays a list of the user current friends, facilitating easy access to their profile.</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        
+                        
+                    </div>
+                </div>
+            </section>
+
+            <section id="playlist_microservice">
+                <h4> 3.2.2 Playlist service</h4>
+                
+                <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ccc; margin: 0 auto;">
+                    OpenAPI Specification can be found <a href="api-specification/playlist-service/index.html" style="color: #007bff; text-decoration: none; font-weight: bold;">here</a>.
+                </div> <br>
+                
+                <img src="diagrams/arh-playlist-service.drawio.png" alt="arh-playlist_service.drawio.png">
+                <div>
+                    <div>
+                        It will be the second microservice and will be responsible for <b>playlists</b>. It will communicate with Playlist database in order to get the data regarding playlists and music.
+                        As we can see in the diagram, the functionalities of the microservice are divided into 5 modules:
+                        <ol>
+                            <li>
+                                <h4>Playlist module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>Get playlist info</b> - retrieves information about a specific playlist, including details about its songs.</li>
+                                    <li><b>Create playlist</b> - allows users to create new playlists</li>
+                                    <li><b>Update playlist</b> - enables users to modify the details and content of an existing playlist</li>
+                                    <li><b>Get playlists list</b> - provides a list of playlists available on its profile.</li>
+                                    <li><b>Add song to playlist</b> - allows users to add a specific song to a chosen playlist, customizing their music collections.</li>
+                                    <li><b>Remove song from playlist</b> - permits users to remove a song from a playlist.</li>
+                                    <li><b>Share playlist with friend</b> - let the user to share its content of a playlist with some of its friends</li>
+                                    <li><b>Combine playlist</b> - enables users to merge or combine multiple playlists into a single playlist - reunion or intersection</li>
+                                    <li><b>Import playlist as JSPF doc</b> - allows users to import playlists in JSPF document format.</li>
+                                    <li><b>Delete playlist</b> - allows users to delete a playlist, removing it from their collection and the platform.</li>
+                                    <li><b>Search playlist</b> - provides a search functionality for users to find specific playlists.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Song module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>See song info</b> - allows users to view detailed information about a specific song</li>
+                                    <li><b>See songs list</b> - provides a list of songs available on the platform.</li>
+                                    <li><b>Search songs by filters</b> - allows users to search for songs based on specific filters</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Album module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>See album info</b> - allows users to view detailed information about a specific album.</li>
+                                    <li><b>See albums list</b> - provides a list of albums available on the platform.</li>
+                                    <li><b>Search albums by filters</b> - enables users to search for albums based on specific filters.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Artist module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>See artist info</b> - allows users to view detailed information about a specific artist.</li>
+                                    <li><b>See artists list</b> - provides a list of artists available on the platform.</li>
+                                    <li><b>Search artists by filters</b> - enables users to search for artists based on specific filters.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Music data collector module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>Collect music data</b> - collects data regarding music, such as: albums, artists, songs. It has to push this data into our database.</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        
+                    </div>
+                </div>
+            </section> 
+
+            <section id="recommendation_microservice">
+                <h4> 3.2.3 Recommendation service</h4>
+                
+                <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ccc; margin: 0 auto;">
+                    OpenAPI Specification can be found <a href="api-specification/recommendation-service/index.html" style="color: #007bff; text-decoration: none; font-weight: bold;">here</a>.
+                </div> <br>
+
+                <img src="diagrams/arh-recommendation-service.drawio.png" alt="arh-recommendation_service.drawio.png" style="width: 100%; height: auto;">
+                <div>
+                    <div>
+                        It will be the third microservice and will be responsible for <b>recommendations</b>. It will communicate with Preferences database in order to get the data regarding user preferences.
+                        As we can see in the diagram, the functionalities of the microservice are divided into 6 modules:
+                        <ol>
+                            <li>
+                                <h4>App link module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>Link Music Streaming app</b> - enables users to link their Music Streaming app account to our web application (Last.fm).</li>
+                                    <li><b>Link Music Store app</b> - enables users to link their Music Store app account to our web application (Discogs).</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Preferences module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>Collecte preferences</b> - collects user preferences from its text input. 
+                                        There will be involved some processing over the given text with the help of <b>Controlled Natural Language</b>.
+                                        <div>This input will be inserted into our <b>Preferences database</b>.</div>
+                                    </li>
+                                </ul>
+                            <li>
+                                <h4>User data collector from third parties module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>Collect preferences from music stores and streaming apps</b> - collects user preferences from its playlists from Music Streaming (Last.fm) apps and Music Store apps (Discogs).
+                                        <div>The result will be inserted into our <b>Preferences database</b>.</div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Daily analysis module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>Get user preferences from user playlists by daily analysis</b> - collects user preferences from its playlists (from <b>Playlist database</b>) by running some analysis over them.
+                                        This analysis will be done daily and will be done over the playlists created by the user in the last 24 hours in order to add only new preferences.
+                                        <div>The result will be inserted into our <b>Preferences database</b>.</div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Recommendation module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li>The recommendation module is divided in two parts: 
+                                        <ul>Recommendation for input 
+                                            <br/>The user inserts some preferences and the service will recommend vinyls based on those preferences.
+                                            For example: I like Queen band. I like rock music. I dislike rap music.
+                                            We will parse the sentences into tokens and retain the information like this:
+                                            {'likes': {'artist':{'Queen'}, 'genre':{rock}}, dislikes: {'genre':{rap}}}
+                                            Then, we will create a query that satisfies all these requests and we will get the vinyls from our <b>Vinyl database</b> and we will recommend them to the user.
+                                            Also, we used the spotify API to get similar artists with the ones that the user likes to supliment the recommendation module.
+                                        </ul>
+                                        <ul>
+                                            Recommendation for user
+                                            <br/>The user will get recommendations based on his preferences such as:
+                                            <ul>
+                                                <li>his created playlists - </li>
+                                                <li>XSPF file</li>
+                                                <li>his playlists from Music Streaming apps;</li>
+                                                <li>his past purchases from Music Store apps.</li>
+                                            </ul>
+                                            The algorithm works similiar, but with more data about the user history.
+                                            We will take in consideration the latest user preferences 
+                                            like this: the last day counts the most, then the last week, then the last month and so on.
+                                        </ul>
+                                    </li>
+                                    <li><b>Get recommendations</b> - retrieves recommendations for a specific user, based on his preferences such as:
+                                            <ul>
+                                                <li>user input - regarding preferences;</li>
+                                                <li>his created playlists - <b>Daily analysis module</b></li>
+                                                <li>his playlists from Music Streaming apps;</li>
+                                                <li>his past purchases from Music Store apps.</li>
+                                            </ul>
+                                        <div>He will get the preferences from our <b>Preferences database</b> via <b>Cache</b> 
+                                        - as the service will constantly recommend vinyl to the user, we need to reduce the number of requests to the database by storing the preferences in cache.</div>
+                                        <div>Also, he will get the data regarding vinyls to recommend from our <b>Vinyl database</b>.</div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <h4>Vinyl data collector module</h4>
+                                <div>This module has the following functionalities:</div>
+                                <ul>
+                                    <li><b>Collect vinyls data for recommendations</b> - collects data regarding vinyls that can be recommended to the user. 
+                                        <div>The data will be collected and will be stored in our <b>Vinyl database</b>.</div>
+                                    </li>
+                                </ul>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+        </section>
+
+        <section id="openapi">
+            <h3> 3.3 OpenAPI Specification </h3>
+            <div>
+                <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ccc; margin: 0 auto;">
+                    <b>User service</b> - OpenAPI Specification can be found <a href="api-specification/user-service/index.html" style="color: #007bff; text-decoration: none; font-weight: bold;">here</a>.
+                </div> <br>  
+                <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ccc; margin: 0 auto;">
+                    <b>Playlist service</b> - OpenAPI Specification can be found <a href="api-specification/playlist-service/index.html" style="color: #007bff; text-decoration: none; font-weight: bold;">here</a>.
+                </div> <br>
+                <div style="text-align: center; padding: 10px; background-color: #f0f0f0; border: 1px solid #ccc; margin: 0 auto;">
+                    <b>Recommendation service</b> - OpenAPI Specification can be found <a href="api-specification/recommendation-service/index.html" style="color: #007bff; text-decoration: none; font-weight: bold;">here</a>.
+                </div>
+            </div>
+        </section>
+
+    </section>
+    
+
+    <section id="internalDataStructures">
+        <h2>4. Internal Data Structures/Models</h2>
+        <section id="user_service">
+            <h3>4.1. User Service Database</h3>
+            <p>For the user service, it's necessary to retain certain user-related data alongside their friendship
+                connections.</p>
+            <img src="diagrams/user_service.png" alt="user_service">
+        </section>
+        <section id="playlist_service">
+            <h3>4.2. Playlist Service Database</h3>
+            <p>For the playlist service, we need relevant data about each playlist, including ownership details, song
+                contents, artists, albums, and relevant information associated with each entity.</p>
+            <img src="diagrams/playlist_service.png" alt="playlist_service">
+        </section>
+        <section id="recommandation_service">
+            <h3>4.3. Recommendation Service Database</h3>
+            For the recommendation service, we store valuable information concerning users' musical preferences in a
+            non-relational database. This storage aims to consider every factor mentioned by the users. An illustrative
+            example demonstrating the anticipated structure of the stored information is provided below.
+            <div>
+                <pre>
+            <code>
+            {
+                "user_id": 1,
+                "preferences": {
+                    "16/01/2024": {
+                        "artists": {
+                            "Beatles": 3,
+                            "Queen": 2
+                        },
+                        "genres": {
+                            "rock": 3,
+                            "pop": 2
+                        },
+                        "years": {
+                            "1960": 3,
+                            "1970": 2
+                        }
+                    },
+                    "17/01/2024": {
+                        "artists": {
+                            "Elvis Presley": 4,
+                            "Michael Jackson": 1
+                        },
+                        "genres": {
+                            "rock": 2,
+                            "pop": 3
+                        },
+                        "years": {
+                            "1950": 2,
+                            "1980": 3
+                        }
+                    },
+                    "5/02/2024": {
+                        "artists": {
+                            "Bob Dylan": 2,
+                            "Led Zeppelin": 2,
+                            "Pink Floyd": 1
+                        },
+                        "genres": {
+                            "folk": 2,
+                            "rock": 2,
+                            "psychedelic": 1
+                        },
+                        "years": {
+                            "1960": 2,
+                            "1970": 2,
+                            "1980": 1
+                        }
+                    }
+        
+            }
+        </code>  
+    </pre>
+
+                
+        </section>
+        <section id="rdf">
+            <h3>4.4. RDF</h3>
+            <p>
+                In our project, we utilize RDF (Resource Description Framework) to define a structured vocabulary of
+                terms and relationships between these terms.
+                RDF schema provides a means to precisely specify and organize the terminology and connections used
+                within our project.
+            </p>
+            <p>
+                We use MusicOntology, a vocabulary for describing music-related information on the Semantic Web.
+                In order to use the Music Ontology, conforming with their guidelines, we need to add a few namespaces to our document
+            </p>
+            <pre>
+        <code>  
+            @prefix mo: http://purl.org/ontology/mo/ .
+            @prefix dc: http://purl.org/dc/elements/1.1/ .
+            @prefix xsd: http://www.w3.org/2001/XMLSchema# .
+            @prefix tl: http://purl.org/NET/c4dm/timeline.owl# .
+            @prefix event: http://purl.org/NET/c4dm/event.owl# .
+            @prefix foaf: http://xmlns.com/foaf/0.1/ .
+            @prefix rdfs: http://www.w3.org/2000/01/rdf-schema# 
+        </code>
+        </pre>
+        <p>
+            The data is stored in Stardog, a graph database that allows us to store and query RDF data.
+            In order to describe a vinyl record, we use the following properties:
+        </p>
+        <pre>
+            http://purl.org/ontology/mo/#vinyl-1770972 a ns1:Vinyl ;
+                dc:date 1987 ;
+                dc:title "The Beatles Anthology" ;
+                ns1:genre "['Rock']" ;
+                ns1:imageUrl "https://i.discogs.com/jHv1_MJiVrokHcodEbB8Mmm6DVXj-pFZDMnFqp6xIPo/rs:fit/g:sm/q:90/h:435/w:450/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU3OTY2/ODEtMTQwMjkyNzAz/NC00Mzg1LmpwZWc.jpeg" ;
+                ns1:track &lt;http://purl.org/ontology/mo/#song-ask_me_whythe_beatles&gt;,
+                    &lt;http://purl.org/ontology/mo/#song-matchboxthe_beatles&gt;,
+                    &lt;http://purl.org/ontology/mo/#song-memphisthe_beatles&gt;,
+                    &lt;http://purl.org/ontology/mo/#song-moneythe_beatles&gt;,
+                    &lt;http://purl.org/ontology/mo/#song-mr_moonlightthe_beatles&gt;,
+                    &lt;http://purl.org/ontology/mo/#song-sweet_little_sixteenthe_beatles&gt;,
+                    &lt;http://purl.org/ontology/mo/#song-to_know_her_is_to_love_herthe_beatles&gt;,
+                    &lt;http://purl.org/ontology/mo/#song-twist_&_shoutthe_beatles&gt; ;
+                foaf:name "The Beatles" .
+            </pre>
+        </section>
+    </section>
+
+    <section id="technologiesUsed">
+        <h2>5. Technologies Used</h2>
+        <section id="python"><h3>5.1 Python</h3>
+            <div>
+                Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation.
+                Python is dynamically typed and garbage-collected. It supports multiple programming paradigms, including structured (particularly procedural), object-oriented and functional programming. It is often described as a "batteries included" language due to its comprehensive standard library
+            </div>
+        </section>
+        <section id="flask"><h3>5.2 Flask</h3> 
+        <div>
+            Flask is a micro web framework written in Python. It is classified as a microframework because it does not require particular tools or libraries.[2] It has no database abstraction layer, form validation, or any other components where pre-existing third-party libraries provide common functions. However, Flask supports extensions that can add application features as if they were implemented in Flask itself. Extensions exist for object-relational mappers, form validation, upload handling, various open authentication technologies and several common framework related tools.
+        </div>
+        </section>
+        <section id="react"><h3>5.3 React</h3>
+            <div>
+                React (also known as React.js or ReactJS) is a free and open-source front-end JavaScript library for building user interfaces based on components. It is maintained by Meta (formerly Facebook) and a community of individual developers and companies.
+
+React can be used to develop single-page, mobile, or server-rendered applications with frameworks like Next.js. Because React is only concerned with the user interface and rendering components to the DOM, React applications often rely on libraries for routing and other client-side functionality.
+            </div>
+        </section>
+        <section id="mongodb"><h3>5.4 MongoDB</h3>
+            <div>
+                MongoDB is a source-available cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with optional schemas. MongoDB is developed by MongoDB Inc. and current versions are licensed under the Server Side Public License (SSPL) which is considered non-free by some organizations and distributions. MongoDB is a member of the MACH Alliance.
+            </div>
+        </section>
+        <section id="postgres"><h3>5.5 PostgreSQL</h3>
+        <div>
+            PostgreSQL also known as Postgres, is a free and open-source relational database management system (RDBMS) emphasizing extensibility and SQL compliance. It was originally named POSTGRES, referring to its origins as a successor to the Ingres database developed at the University of California, Berkeley. In 1996, the project was renamed to PostgreSQL to reflect its support for SQL.
+        </div>
+        </section>
+        <section id="sparql"><h3>5.6 Sparql </h3>
+        <div>
+            SPARQL (a recursive acronym for SPARQL Protocol and RDF Query Language) is an RDF query language—that is, a semantic query language for databases—able to retrieve and manipulate data stored in Resource Description Framework (RDF) format. It was made a standard by the RDF Data Access Working Group (DAWG) of the World Wide Web Consortium, and is recognized as one of the key technologies of the semantic web.
+        </div></section>
+        <section id="redis"><h3>5.7 Redis </h3>
+        <div>
+            Redis (Remote Dictionary Server) is an open-source in-memory storage, used as a distributed, in-memory key–value database, cache and message broker, with optional durability. Because it holds all data in memory and because of its design, Redis offers low-latency reads and writes, making it particularly suitable for use cases that require a cache. Redis is the most popular NoSQL database, and one of the most popular databases overall.
+
+        </div></section>
+        <section id="nlp"><h3>5.8 Controlled natural languages</h3>
+        <div>
+            Controlled natural languages (CNLs) are subsets of natural languages that are obtained by restricting the grammar and vocabulary in order to reduce or eliminate ambiguity and complexity. Traditionally, controlled languages fall into two major types: those that improve readability for human readers (e.g. non-native speakers), and those that enable reliable automatic semantic analysis of the language.        
+        </div> </section>
+    </section>
+
+    <section id="externalData">
+        <h2>6. External Data Sources</h2>
+        <p>
+            To generate recommendations, we require specific data related to users' musical preferences, their
+            self-provided preferences, their existing playlists, and their purchased songs from diverse music stores.
+        </p>
+        <p>
+            To gather this necessary data, we'll leverage Last.fm, a music streaming service enabling users to curate
+            playlists. Additionally, we'll utilize the Discogs API, a platform providing access to users' past music
+            purchases.
+        </p>
+        <p>
+            We also use DBpedia, which provides information about various music-related entities, such as artists,
+            albums, genres, and more.
+        </p>
+        <p>
+            We also use The Music Ontology Specification, that provides main concepts and properties for describing
+            music (i.e. artists, albums and tracks) on the Semantic Web.
+        </p>
+    </section>
+
+    <section id="linkedDataPrinciples">
+        <h2>7. Linked Data Principles</h2>
+        <p>Linked data is a paradigm on the web that relies on existing web technologies, minimizing redundancy,
+            facilitating reusability, enabling discovery, maximizing interconnectedness between related 'things,' and
+            embracing a pragmatic approach.
+            </br> Several key principles define linked data: </p>
+        <p>
+            1. Use URIs as names for things </br>
+
+            2. Use HTTP URIs so that people can look up those names.</br>
+
+            3. When someone looks up a URI, provide useful information, using the standards (RDF*, SPARQL)</br>
+
+            4. Include links to other URIs. so that users can discover more things.</br>
+        </p>
+        <p>
+            We maintain these principles by assigning unique HTTP URIs to represent vinyl records, artists, genres, and
+            users in the application,
+            by using RDF to define metadata and relationships between these entities,
+            by employing SPARQL for querying user preferences and by
+            establishing links between entities such as vinyls, artists, genres, or songs."
+        </p>
+    </section>
+
+    <section id="authors" typeof="sa:AuthorsList">
+        <h2>8. Authors</h2>
+        <ul>
+            <li typeof="sa:ContributorRole" property="schema:author">
+                <span typeof="schema:Person">
+                    <meta property="schema:givenName" content="Andreea">
+                    <meta property="schema:familyName" content="Ciocan">
+                    <span property="schema:name">Andreea Ciocan</span>
+                </span>
+            </li>
+            <li typeof="sa:ContributorRole" property="schema:author">
+                <span typeof="schema:Person">
+                    <meta property="schema:givenName" content="Daniel">
+                    <meta property="schema:additionalName" content="Andrei">
+                    <meta property="schema:familyName" content="Haivas">
+                    <span property="schema:name">Daniel-Andrei Haivas</span>
+                </span>
+            </li>
+        </ul>
+    </section>
+
+    <section id="bibliografie">
+        <h2>9. Bibliografie</h2>
+        https://profs.info.uaic.ro/~busaco/teach/courses/wade/presentations/web08Taxonomie-RDFSchema-Lexicon-SKOS.pdf
+        https://www.w3.org/TR/rdf-schema/
+        https://profs.info.uaic.ro/~busaco/teach/courses/wade/presentations/web07ArhitecturaAplicatiilorRDF-LinkedData.pdf
+        - linked data
+        https://www.w3.org/DesignIssues/LinkedData.html
+
+        <dl>
+            <dt id="ref-MDN"> MDN </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://developer.mozilla.org/en-US/">
+                <cite property="schema:name">
+                    <a href="https://developer.mozilla.org/en-US/"> Mozilla Developer Network</a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-SHTML"> SHTML </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://w3c.github.io/scholarly-html/">
+                <cite property="schema:name">
+                    <a href="https://w3c.github.io/scholarly-html/"> Scholarly HTML </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-UAIC"> UAIC </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://profs.info.uaic.ro/~busaco/teach/courses/web/index.html">
+                <cite property="schema:name">
+                    <a href="https://profs.info.uaic.ro/~busaco/teach/courses/web/index.html"> UAIC Web Technologies
+                        course site </a>
+                </cite>
+                , by
+                <span property="schema:author" typeof="schema:Person">
+                    <span property="schema:name">Sabin-Corneliu Buraga</span>
+                </span>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-drawio"> draw.io </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://app.diagrams.net/">
+                <cite property="schema:name">
+                    <a href="https://app.diagrams.net/"> draw.io </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-linked-data"> Linked Data </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://www.w3.org/DesignIssues/LinkedData.html">
+                <cite property="schema:name">
+                    <a href="https://www.w3.org/DesignIssues/LinkedData.html"> Linked Data </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-rdf-schema"> RDF Schema </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://www.w3.org/TR/rdf-schema/?fbclid=IwAR0jtCOCUXy_A0mofqKhKA7cXZjrAS5miw57Q-qeZbzuMgxmOj6ga_hOUk0">
+                <cite property="schema:name">
+                    <a href="https://www.w3.org/TR/rdf-schema/?fbclid=IwAR0jtCOCUXy_A0mofqKhKA7cXZjrAS5miw57Q-qeZbzuMgxmOj6ga_hOUk0"> RDF
+                        Schema </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-rdf"> web07 Arhitectura Aplicatiilor RDF </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://profs.info.uaic.ro/~busaco/teach/courses/wade/presentations/web07ArhitecturaAplicatiilorRDF-LinkedData.pdf">
+                <cite property="schema:name">
+                    <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/presentations/web07ArhitecturaAplicatiilorRDF-LinkedData.pdf"> RDF </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-rdf-schema"> web08 Taxonomie RDF Schema Lexicon SKOS </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://profs.info.uaic.ro/~busaco/teach/courses/wade/presentations/web08Taxonomie-RDFSchema-Lexicon-SKOS.pdf?fbclid=IwAR0jtCOCUXy_A0mofqKhKA7cXZjrAS5miw57Q-qeZbzuMgxmOj6ga_hOUk0">
+                <cite property="schema:name">
+                    <a href="https://profs.info.uaic.ro/~busaco/teach/courses/wade/presentations/web08Taxonomie-RDFSchema-Lexicon-SKOS.pdf?fbclid=IwAR0jtCOCUXy_A0mofqKhKA7cXZjrAS5miw57Q-qeZbzuMgxmOj6ga_hOUk0"> RDF
+                        Schema </a>
+                </cite>
+            </dd>
+        </dl>
+
+        <dl>
+            <dt id="ref-python"> Python </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://en.wikipedia.org/wiki/Python_(programming_language)">
+                <cite property="schema:name">
+                    <a href="https://en.wikipedia.org/wiki/Python_(programming_language)"> Python (programming
+                        language) </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl id="ref-flask">
+            <dt> Flask </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://en.wikipedia.org/wiki/Flask_(web_framework)">
+                <cite property="schema:name">
+                    <a href="https://en.wikipedia.org/wiki/Flask_(web_framework)"> Flask (web framework) </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-react"> React </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://en.wikipedia.org/wiki/React_(software)">
+                <cite property="schema:name">
+                    <a href="https://en.wikipedia.org/wiki/React_(software)"> React (software) </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-mongodb"> MongoDB </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://en.wikipedia.org/wiki/MongoDB">
+                <cite property="schema:name">
+                    <a href="https://en.wikipedia.org/wiki/MongoDB"> MongoDB </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-postgres"> PostgreSQL </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://en.wikipedia.org/wiki/PostgreSQL">
+                <cite property="schema:name">
+                    <a href="https://en.wikipedia.org/wiki/PostgreSQL"> PostgreSQL </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-sparql"> SPARQL </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://en.wikipedia.org/wiki/SPARQL">
+                <cite property="schema:name">
+                    <a href="https://en.wikipedia.org/wiki/SPARQL"> SPARQL </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-redis"> Redis </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://en.wikipedia.org/wiki/Redis">
+                <cite property="schema:name">
+                    <a href="https://en.wikipedia.org/wiki/Redis"> Redis </a>
+                </cite>
+            </dd>
+        </dl>
+        <dl>
+            <dt id="ref-nlp"> NLP </dt>
+            <dd property="schema:citation" typeof="schema:ScholarlyArticle"
+                resource="https://en.wikipedia.org/wiki/Controlled_natural_language">
+                <cite property="schema:name">
+                    <a href="https://en.wikipedia.org/wiki/Controlled_natural_language"> Natural language processing
+                        </a>
+                </cite>
+            </dd>
+        </dl>
+
+    </section>
+</body>
+
+</html>
