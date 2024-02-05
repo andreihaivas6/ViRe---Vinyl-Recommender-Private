@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import request
 from services.preferences_service import set_user_preferences
+from services.recommendation_service import get_recommendation_for_user_by_artists, get_recommendation_for_user_by_genres, get_recommendation_per_periods
 from others import auth_middleware, Utils
 import requests
 import json
@@ -26,8 +27,6 @@ def add_preference():
 # @auth_middleware
 def recommend():
     try:
-        user_id = Utils.get_user_id_from_token()
-        # preferences = Utils.get_preferences_for_user(user_id)
         preferences = {
         "user_id": 1,
         "preferences": {
@@ -113,14 +112,22 @@ def recommend():
         }
         } 
         result_per_periods = get_recommendation_for_user(preferences)
-        print(result_per_periods)
-        
-        # TODO: Get preferences from nosql database / cache by user_id
-        # TODO: Use preferences to call -> Sparql service -> which queries Stardog (from DBpedia) -> returns recommendations
+       
+        queries_to_run = get_recommendation_per_periods(result_per_periods)
+        recommendation_by_artists = get_recommendation_for_user_by_artists(result_per_periods)
+    
+        recommendation_by_genre = get_recommendation_for_user_by_genres(result_per_periods)
 
+        res_complete = requests.post("http://localhost:5003/queries", json={"queries": [queries_to_run]}, headers=request.headers).json()
+        res_by_artist = requests.post("http://localhost:5003/queries", json={"queries": [recommendation_by_artists]}, headers=request.headers).json()
+        res_by_genre = requests.post("http://localhost:5003/queries", json={"queries": [recommendation_by_genre]}, headers=request.headers).json()
         return {
             "msg": "Recommendations fetched",
-            "data": []
+            "data": {
+                "complete": res_complete,
+                "by_artist": res_by_artist,
+                "by_genre": res_by_genre
+            }
         }, 200
     except Exception as e:
         print(e)
