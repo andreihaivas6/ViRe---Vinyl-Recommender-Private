@@ -1,20 +1,8 @@
 {
     "playlist": {
-      "title": "The Beatles Best Hits",
+      "title": "The Rolling Stones Best Hits",
       "creator": "Swiftie",
       "track": [
-        {
-          "location": ["http://example.com/rolling_in_the_deep.mp3"],
-          "title": "Let It Be",
-          "creator": "The Beatles",
-          "album": "Let It Be"
-        },
-        {
-          "location": ["http://example.com/someone_like_you.mp3"],
-          "title": "Misery",
-          "creator": "The Beatles",
-          "album": "The Beatles In Mono"
-        },
         {
           "location": ["http://example.com/you_belong_with_me.mp3"],
           "title": "Emotional Rescue",
