@@ -84,7 +84,7 @@ def get_similar_artists_query(artist_name):
 def sparql_query_builder_for_preferences(preferences):
     # preferences = {'like': {}, 'dislike': {'before': 2020,'genre':{'hip-hop'}}, 'love': {'artist': {'verdi', 'rossini','the beatles'}, 'before': 2020, 'after': 2014}, 'hate': {}, 'sentiments': []}
     query_base = """
-SELECT DISTINCT ?vinyl ?title ?artist ?genre ?imageUrl ?track ?date
+SELECT DISTINCT ?vinyl ?title ?artist ?genre ?imageUrl ?date ?track
     WHERE {
         ?vinyl a ns1:Vinyl ;
         dc:title ?title ;

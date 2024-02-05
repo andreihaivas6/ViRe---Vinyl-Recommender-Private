@@ -2,6 +2,7 @@ from flask import current_app
 from flask import request
 
 import jwt
+import json
 
 from pymongo import MongoClient
 
@@ -33,3 +34,25 @@ class Utils:
         collection = db['preferences_test-5']
 
         return collection.find_one({"user_id": user_id})
+
+    @staticmethod
+    def make_vinyls_readable(res):
+        result = {
+            "vinyls": [],
+        }
+        for elem in res['result']:
+            # print(elem)
+            if elem["results"]["bindings"]:
+                for binding in elem["results"]["bindings"]:
+                    vinyl = {}
+                    for key, value in binding.items():
+                        if key == "genre":
+                            genre = value["value"].replace("'", '"')
+                            genre = json.loads(genre)
+                            genre = ', '.join(genre)
+                            vinyl[key] = genre
+                        else:
+                            vinyl[key] = value["value"]
+                    
+                    result["vinyls"].append(vinyl)
+        return result
